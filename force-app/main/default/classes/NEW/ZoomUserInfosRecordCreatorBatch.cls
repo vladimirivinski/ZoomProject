@@ -1,0 +1,56 @@
+public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Batchable<sObject>, schedulable {
+    public Database.QueryLocator start(Database.BatchableContext bc){
+        // NOTE: Retriev just Active users from org 
+        String Query = 'SELECT Id, Name, Email FROM User WHERE isActive = true AND Email LIKE \'%@myubiquity.com%\'';
+        return Database.getQueryLocator(query);
+    }
+    public void execute(Database.BatchableContext bc, List<User> scope){
+        List<Zoom_Users_Info__c> result = new List <Zoom_Users_Info__c>();
+            for(User u: scope) {
+                Zoom_Users_Info__c rec = new Zoom_Users_Info__c();
+                rec.User__c  = u.id;
+                rec.Email__c = u.Email.substringBefore('.invalid'); // NOTE: substring used for devorg!!!
+                rec.Name = u.Name;
+                rec.Tracking_Date__c = Date.today();
+                result.add(rec);
+            }
+        insert result;
+    }
+    public void finish(Database.BatchableContext bc){}
+
+    //NOTE: Schedule interface
+    public static void start(Integer hour){
+        string jobName = 'Zoom Users Info Create Records';
+        if (hour == 007) Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
+        else{
+            jobName = jobName += ' - ' + datetime.now().format();
+            String cron = '0 0 ' + string.valueof(hour) + ' ? * MON-FRI'; // NOTE: Execute From Monday - Friday 
+            system.schedule(jobName, cron, new ZoomUserInfosRecordCreatorBatch());
+        }
+    }
+
+    public void execute(SchedulableContext SC) {
+        database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
+    }
+}
+// EXECUTE SCHEDULE 
+// immediately submits the batch job - 007 param just a JOKE!!!
+//ZoomUserInfosRecordCreatorBatch.start(007);
+
+// schedules the batch job to run nightly at 0am. - FROM 0 to 23
+// ZoomUserInfosRecordCreatorBatch.start(0);
+
+
+
+
+
+//=====================================================================================================================
+//=====================================================================================================================
+// List<User> lstUsr = [SELECT Id, Name, Email FROM User WHERE isActive = true AND Email LIKE '%@%.com%'];
+// List<Zoom_user__c> zoomUsrLst = new List<Zoom_user__c>();
+// for(User u: lstUsr){
+//     Zoom_user__c usr = new Zoom_user__c();
+//     usr.name = u.name;
+//   	usr.email__c = u.email.substringBefore('.invalid');
+//     zoomUsrLst.add(usr);
+// } insert zoomUsrLst;
