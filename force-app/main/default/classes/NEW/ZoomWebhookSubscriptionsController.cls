@@ -36,7 +36,6 @@ public without sharing class ZoomWebhookSubscriptionsController {
         }
     }
 
-
     // TODO: refactore class
     public static void isUserLogInOrOut(String email, DateTime logTime, String event){
         List<Zoom_Users_Info__c> usrLst = Database.query(query+qWhere+email+qLimit);
