@@ -1,7 +1,8 @@
 public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Batchable<sObject>, schedulable {
     public Database.QueryLocator start(Database.BatchableContext bc){
-        // NOTE: Retriev just Active users from org 
-        String Query = 'SELECT Id, Name, Email FROM User WHERE isActive = true AND Email LIKE \'%@myubiquity.com%\'';
+        // NOTE: Retrieve Active users from org 
+        // String query = 'SELECT Id, Name, Email FROM User WHERE isActive = true  AND Email LIKE \'%@myubiquity.com%\'';
+        String query = 'SELECT Id, Name, Email FROM User WHERE isActive = true AND CallCenterId != null AND (Email LIKE \'%@myubiquity.com%\' OR Email = \'mchapa@myubiquity.com\')';
         return Database.getQueryLocator(query);
     }
     public void execute(Database.BatchableContext bc, List<User> scope){
@@ -39,9 +40,6 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
 
 // schedules the batch job to run nightly at 0am. - FROM 0 to 23
 // ZoomUserInfosRecordCreatorBatch.start(0);
-
-
-
 
 
 //=====================================================================================================================

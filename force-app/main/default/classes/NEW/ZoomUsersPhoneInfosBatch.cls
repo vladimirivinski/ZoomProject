@@ -1,7 +1,4 @@
-global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable<sObject>, Database.AllowsCallouts {
-    public static final String NOW = DateTime.now().format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
-    public static final String LAST_30MIN = DateTime.now().addMinutes(-30).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
-    public static final Datetime LAST_30MINs = DateTime.now().addMinutes(-30);
+global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable {
     
     public String query = 'SELECT Id, Name, Email__c, Inbound_Calls__c, Outbound_Calls__c  FROM Zoom_Users_Info__c WHERE Tracking_Date__c = TODAY';
     global Database.QueryLocator start(Database.BatchableContext BC) {
@@ -16,24 +13,24 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, CreatedDate,Call_Date_Time__c 
                                                 FROM Zoom_Phone_Calls_Info__c z 
                                                 WHERE CreatedDate = TODAY
-                                            ]){ // CHECK > VARIABLE!!!!!!!!!!!!!! WHERE CreatedDate > :LAST_30MINs
+                                            ]){ 
             orgCallsMap.put(calls.Call_Id__c, calls);
         }
         for (Zoom_Users_Info__c usr : scope ){
-            String endpoint = 'callout:ZoomPhone/phone/users/'+usr.email__c+'/call_logs';
-            // String address = 'callout:ZoomPhone/phone/users/'+usr.email__c+'/call_logs';
-            // String address = 'https://api.zoom.us/v2/ZoomPhone/phone/users/'+usr.email__c+'/call_logs';
-            // String fromTime = '?from=' + '"' + LAST_30MIN + '"';
-            // String toTime = '&to='  + '"' + NOW + '"';
-            // // String pageSize = '&page_size=300';
-            // String  = address + fromTime + toTime;
-
+            // String endpoint = 'callout:ZoomPhone/phone/users/'+usr.email__c+'/call_logs';
+            String dt = String.valueOf(Date.today());
+            String address = 'callout:ZoomPhone/phone/users/'+usr.Email__c+'/call_logs';
+            String fromTime = '?from=' + dt;
+            String toTime = '&to=' + dt ;
+            String pageSize = '&page_size=300';
+            String url = address + fromTime + toTime + pageSize;
             HttpRequest req = new HttpRequest();
             req.setMethod('GET');
             req.setHeader('Content-type', 'application/json');
-            req.setEndpoint(endpoint); 
+            req.setEndpoint(url); 
             Http http = new Http();
             HttpResponse res = http.send(req);
+            System.debug('===========================================res.getBody: \n ' + res.getBody());
             if (res.getStatusCode() == 200) {
                 try{
                     ZooomUserResponseWrapper wrappedResponse = ZooomUserResponseWrapper.parse(res.getBody());
@@ -84,7 +81,26 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         insert callLst;
     } 
     global void finish(Database.BatchableContext BC){}
+
+
+    public static void start(Integer test){
+        string jobName = 'Zoom Phone Calls updater job';
+        if (test == 0) Database.executeBatch(new ZoomUsersPhoneInfosBatch(), 50);
+        else{
+            jobName = jobName += ' - ' + datetime.now().format();
+            System.schedule(jobName, '0 0 * * * ?', new ZoomUsersPhoneInfosBatch());
+        }
+    }
+    public void execute(SchedulableContext SC) {
+        database.executeBatch(new ZoomUsersPhoneInfosBatch(), 50);
+    }
+
 }
+
+
+
+// System.schedule(jobName, '0 0,15,30,45 * * * ?', new ScheduledClass());
+
 
 //Id batchJobId = Database.executeBatch(new ZoomUsersPhoneInfosBatch(), 10);
 
@@ -97,3 +113,39 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         // String lstStr = String.valueOf(dt15);
         // List<String> lstStr15 = lstStr.split(' ');
         // String last15Min = String.join(lstStr15,'\'T\'') + '\'Z\'';
+
+
+// public static final String NOW = DateTime.now().format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
+// public static final String LAST_30MIN = DateTime.now().addMinutes(-30).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
+// public static final Datetime LAST_30MINs = DateTime.now().addMinutes(-30);
+
+// String address = 'callout:ZoomPhone/phone/users/'+usr.email__c+'/call_logs';
+// String fromTime = '?from=' + LAST_30MIN;
+// String toTime = '&to=' + NOW ;
+// String pageSize = '&page_size=300';
+// String params = fromTime + toTime + pageSize;
+
+
+
+
+// global static String toUrlParams(Map<String,String> params){
+//     List<String> paramsList = new List<String>();
+//     for(String k :params.keySet()){
+//         string val=params.get(k);
+//         paramsList.add(k + '=' + (val!=null?EncodingUtil.URLENCODE(params.get(k),'UTF-8'):''));
+//     }
+//     return String.join(paramsList, '&');
+// }
+
+// global static String getEndpoint(String endpoint, Map<String, String> urlParams){
+//     if(urlParams != NULL && !urlParams.isEmpty()){
+//         endpoint = endpoint + '?' + toUrlParams(urlParams);
+//     }
+//     return endpoint;
+// }
+
+// Map<String, String> params = new Map<String, String>{
+//     'from' => LAST_30MIN,
+//     'to' => NOW,
+//     'page_size' => '300'
+// };
