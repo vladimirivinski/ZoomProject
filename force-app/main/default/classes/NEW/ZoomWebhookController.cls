@@ -2,7 +2,7 @@ public without sharing class ZoomWebhookController {
     static final String PRESENCE_STATUS = 'user.presence_status_updated';
     static final String USER_SIGNED_IN = 'user.signed_in';
     static final String USER_SIGNED_OUT = 'user.signed_out';
-    static String query = 'SELECT Id, Tracking_Date__c, Email__c, Presence_Status__c, LogIn__c, LogOut__c, User_Log_In__c, User_Log_Out__c FROM Zoom_Users_Info__c';
+    static String query = 'SELECT Id, Tracking_Date__c, Email__c, Presence_Status__c, Status_Updated__c, LogIn__c, LogOut__c, User_Log_In__c, User_Log_Out__c FROM Zoom_Users_Info__c';
     static String qWhere = ' WHERE Email__c = \'';
     static String qLimit = '\' AND Tracking_Date__c = TODAY LIMIT 1';
 
@@ -28,8 +28,12 @@ public without sharing class ZoomWebhookController {
         try {
             if(usr.size()>0 && !usr.isEmpty()){
                 usr[0].Presence_Status__c = status;
-                createUserEventInfo(event, logTime, status, usr);
+                usr[0].Status_Updated__c = logTime;
+                if(status == 'Offline'){ // Get LogOut State from last Offline event
+                    usr[0].LogOut__c = logTime;
+                }
                 update usr;
+                // createUserEventInfo(event, logTime, status, usr);
             }
         } catch (DmlException e) {
             System.debug('EXCEPTION: method isPresenceStatusUppdated: \n' + e.getMessage());
