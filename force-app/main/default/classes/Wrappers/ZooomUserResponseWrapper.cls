@@ -2,8 +2,8 @@ public with sharing class ZooomUserResponseWrapper {
 	public String next_page_token;	//
 	public Integer page_size;	//30
 	public Integer total_records;	//7
-	public Date frm;	//2022-12-10
-	public Date to;	//2022-12-11
+	public String frm;	//2022-12-10
+	public String to;	//2022-12-11
 	public List<cls_call_logs> call_logs;
 	public class cls_call_logs {
 		public String id;	//1239d685-902c-414f-9676-3b53cebccde6
@@ -33,6 +33,7 @@ public with sharing class ZooomUserResponseWrapper {
 		public DateTime call_end_time;	//2022-12-10T00:43:50Z
 		public String department;	//
 		public String cost_center;	//
+		public String recording_type;
 		public cls_forwarded_by forwarded_by;
 	}
 	class cls_forwarded_by {

@@ -1,6 +1,6 @@
 global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable {
     
-    public String query = 'SELECT Id, Name, Email__c, Inbound_Calls__c, Outbound_Calls__c  FROM Zoom_Users_Info__c WHERE Tracking_Date__c = TODAY';
+    public String query = 'SELECT Id, Name, Email__c FROM Zoom_Users_Info__c WHERE Tracking_Date__c = TODAY';
     global Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
@@ -9,20 +9,25 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         Map<String, Zoom_Phone_Calls_Info__c> callMap = new Map<String, Zoom_Phone_Calls_Info__c>();
         Map<String, Zoom_Phone_Calls_Info__c> orgCallsMap  = new Map<String, Zoom_Phone_Calls_Info__c >();
         Map<String, Zoom_Phone_Calls_Info__c> resultMap = new Map<String, Zoom_Phone_Calls_Info__c>();
-
-        for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, CreatedDate,Call_Date_Time__c 
-                                                FROM Zoom_Phone_Calls_Info__c z 
-                                                WHERE CreatedDate = TODAY
-                                            ]){ 
-            orgCallsMap.put(calls.Call_Id__c, calls);
-        }
+        
         for (Zoom_Users_Info__c usr : scope ){
-            // String endpoint = 'callout:ZoomPhone/phone/users/'+usr.email__c+'/call_logs';
-            String dt = String.valueOf(Date.today());
-            String address = 'callout:ZoomPhone/phone/users/'+usr.Email__c+'/call_logs';
-            String fromTime = '?from=' + dt;
-            String toTime = '&to=' + dt ;
+        
+            DateTime endTime = DateTime.now();
+            DateTime startTime = DateTime.now();
+            DateTime modifiedDate = startTime.addHours(-1);
+            String strStart = modifiedDate.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+            String strEnd = startTime.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+            // =================================================================
+            // System.debug(' \n =-=-=-=-=-=-=-=-= endTime -=-=-=-=-=-=-=-=-= \n ' + endTime);
+            // System.debug(' \n =-=-=-=-=-=-=-=-= modifiedDate -=-=-=-=-=-=-=-=-= \n ' + modifiedDate);
+            // System.debug(' \n =-=-=-=-=-=-=-=-= strStart -=-=-=-=-=-=-=-=-= \n ' + strStart);
+            // System.debug(' \n =-=-=-=-=-=-=-=-= strEnd -=-=-=-=-=-=-=-=-= \n ' + strEnd);
+            // =================================================================
+
+            String fromTime = '?from=' + strStart;
+            String toTime = '&to=' + strEnd ;
             String pageSize = '&page_size=300';
+            String address = 'callout:ZoomPhone/phone/users/'+usr.Email__c+'/call_logs';
             String url = address + fromTime + toTime + pageSize;
             HttpRequest req = new HttpRequest();
             req.setMethod('GET');
@@ -30,35 +35,36 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
             req.setEndpoint(url); 
             Http http = new Http();
             HttpResponse res = http.send(req);
-            System.debug('===========================================res.getBody: \n ' + res.getBody());
+            System.debug(' \n ^^^^^^^^^^^^^^^^^^^^ RESPONSE BODY ^^^^^^^^^^^^^^^^^^^^ \n' + res.getBody());
             if (res.getStatusCode() == 200) {
                 try{
                     ZooomUserResponseWrapper wrappedResponse = ZooomUserResponseWrapper.parse(res.getBody());
-                    Integer inbound = 0;
-                    Integer outbound = 0;
                     if(wrappedResponse.total_records != null && wrappedResponse.total_records != 0){
                         for(ZooomUserResponseWrapper.cls_call_logs val : wrappedResponse.call_logs){
+                            System.debug('--------------- val -------------- : ' + val);
                             Zoom_Phone_Calls_Info__c info = new Zoom_Phone_Calls_Info__c();
                             info.Name = usr.name;
                             info.Zoom_Users_Info__c = usr.id;
                             info.Email__c = usr.email__c;
                             info.Call_Date_Time__c = val.date_time;
                             info.Call_Id__c = val.call_id;
+                            info.caller_name__c = val.caller_name;
+                            info.caller_number__c = val.caller_number;
+                            // result: Auto Recorded || Call connected || Busy || No Answer || Answered by Other Member || Rejected
+                            // recording_type: null || Automatic ~ On-demand
+                            // has_recording : false || null - deprecated
+                            info.Call_Result__c = val.result;
+                            info.has_recording__c = val.recording_type != null ? true : false;
                             if(val.direction == 'inbound'){
-                                inbound++;
                                 info.Inbound_Call__c = val.direction;
                                 info.Inbound_Call_Duration__c = val.duration/60; // CHECK !!!!
                                 info.Waiting_Time__c = val.waiting_time; // ??CHECK
                                 info.Hold_Time__c = val.hold_time; // ??CHECK
                             } else if(val.direction == 'outbound'){
-                                outbound++;
                                 info.Outbound_Call__c = val.direction;
-                                info.Outbound_Call_Duration__c = val.duration;
+                                info.Outbound_Call_Duration__c = val.duration/60;
                             }
-                            // callLst.add(info);
                             callMap.put(info.Call_Id__c, info);
-                            usr.Inbound_Calls__c = inbound;
-                            usr.Outbound_Calls__c = outbound;
                         }
                 }
                 }  catch(Exception e) {
@@ -66,13 +72,16 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
                 }
             }
         }
-        update scope;
-
+        
+        for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, CreatedDate FROM Zoom_Phone_Calls_Info__c z WHERE CreatedDate = TODAY]){ 
+            orgCallsMap.put(calls.Call_Id__c, calls);
+        }
         // //TODO: Create handler  and converter
         // Compare Maps with org data and inbound data
         for(String m: callMap.keySet()){
-            if(!orgCallsMap.containsKey(m))
+            if(!orgCallsMap.containsKey(m)){
                 resultMap.put(m, callMap.get(m));
+            }
         }
         // Convert to result list for insert
         for(Zoom_Phone_Calls_Info__c i: resultMap.values()){
@@ -83,12 +92,12 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
     global void finish(Database.BatchableContext BC){}
 
 
-    public static void start(Integer test){
+    public static void start(Integer mins){
         string jobName = 'Zoom Phone Calls updater job';
-        if (test == 0) Database.executeBatch(new ZoomUsersPhoneInfosBatch(), 50);
+        if (mins == 007) Database.executeBatch(new ZoomUsersPhoneInfosBatch(), 50);
         else{
-            jobName = jobName += ' - ' + datetime.now().format();
-            System.schedule(jobName, '0 0 * * * ?', new ZoomUsersPhoneInfosBatch());
+            jobName = jobName += mins + ' - ' + datetime.now().format();
+            System.schedule(jobName, '0 '+ string.valueof(mins) + ' * * * ?', new ZoomUsersPhoneInfosBatch());
         }
     }
     public void execute(SchedulableContext SC) {
@@ -98,8 +107,13 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
 }
 
 
-
-// System.schedule(jobName, '0 0,15,30,45 * * * ?', new ScheduledClass());
+//Start all batches every 10 minutes
+// ZoomUsersPhoneInfosBatch.start(0);
+// ZoomUsersPhoneInfosBatch.start(10);
+// ZoomUsersPhoneInfosBatch.start(20);
+// ZoomUsersPhoneInfosBatch.start(30);
+// ZoomUsersPhoneInfosBatch.start(40);
+// ZoomUsersPhoneInfosBatch.start(50);
 
 
 //Id batchJobId = Database.executeBatch(new ZoomUsersPhoneInfosBatch(), 10);
@@ -149,3 +163,37 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
 //     'to' => NOW,
 //     'page_size' => '300'
 // };
+
+
+// =============================================================================================
+
+            // String dt = String.valueOf(Date.today());
+            // String fromTime = '?from=' + dt;
+            // String toTime = '&to=' + dt ;
+            // String pageSize = '&page_size=300';
+            // String url = address + fromTime + toTime + pageSize;
+         
+            // String pageSize = '?page_size=300';
+            // String url = address + pageSize;
+
+    // Date now = Date.today(); //2023-01-05 00:00:00
+            // DateTime startTime = Datetime.newInstance(now.year(), now.month(), now.day(), 8, 0, 0);
+            // String strConvertedDateGMT = startTime.format('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+            // DateTime currTime = DateTime.now();
+            // String endTime = currTime.format('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+
+            // DateTime endTime0 = Datetime.newInstance(now.year(), now.month(), now.day(), 0, 0, 0);
+            // DateTime endTime8 = Datetime.newInstance(now.year(), now.month(), now.day(), 8, 0, 0);
+            // DateTime endTime15 = Datetime.newInstance(now.year(), now.month(), now.day(), 15, 0, 0);
+            // String endConvertedDateGMT = endTime15.format('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+            
+
+            // System.debug(' \n =-=-=-=-=-=-=-=-= now -=-=-=-=-=-=-=-=-= \n ' + now);                                 //  2023-01-05 00:00:00
+            // System.debug(' \n =-=-=-=-=-=-=-=-= startTime -=-=-=-=-=-=-=-=-= \n ' + startTime);                     //  2023-01-05 08:00:00
+            // System.debug(' \n =-=-=-=-=-=-=-=-= strConvertedDateGMT -=-=-=-=-=-=-=-=-= \n ' + strConvertedDateGMT); //  2023-01-05T00:00:00Z !!!
+            // System.debug(' \n =-=-=-=-=-=-=-=-= endTime0 -=-=-=-=-=-=-=-=-= \n ' + endTime0);                       //  2023-01-05 08:00:00
+            // System.debug(' \n =-=-=-=-=-=-=-=-= endTime8 -=-=-=-=-=-=-=-=-= \n ' + endTime8);                       //  2023-01-05 16:00:00
+            // System.debug(' \n =-=-=-=-=-=-=-=-= endTime15 -=-=-=-=-=-=-=-=-= \n ' + endTime15);                     //  2023-01-05 23:00:00
+            // System.debug(' \n =-=-=-=-=-=-=-=-= endConvertedDateGMT -=-=-=-=-=-=-=-=-= \n ' + endConvertedDateGMT); //  2023-01-05T15:00:00Z !!!
+
+            // =================================================================

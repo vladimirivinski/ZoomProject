@@ -8,13 +8,17 @@ public without sharing class ZoomWebhookController {
 
     public static void checkZoomEvent(Map<String,Object> resp){
         // TODO: Create wrapper class
+        // =================================================================================================
+        // =================================================================================================
         Map<String,Object> mPayload = (Map<String,Object>)resp.get('payload');
         Map<String,Object> mObj = (Map<String,Object>)mPayload.get('object');
         String zoomEvent  = resp.get('event').toString();
         String accId = mPayload.get('account_id').toString();
         String email = mObj.get('email').toString();
         DateTime logTime = (DateTime)JSON.deserialize('"'+mObj.get('date_time')+'"', DateTime.class);
-
+        // =================================================================================================
+        // =================================================================================================
+        
         if(zoomEvent == PRESENCE_STATUS){
             String status = mObj.get('presence_status').toString();
             isPresenceStatusUpdated(email, status, zoomEvent, logTime);
@@ -25,18 +29,10 @@ public without sharing class ZoomWebhookController {
 
     public static void isPresenceStatusUpdated(String email, String status, String event, DateTime logTime){
         List<Zoom_Users_Info__c> usr = Database.query(query+qWhere+email+qLimit);
-        try {
-            if(usr.size()>0 && !usr.isEmpty()){
-                usr[0].Presence_Status__c = status;
-                usr[0].Status_Updated__c = logTime;
-                if(status == 'Offline'){ // Get LogOut State from last Offline event
-                    usr[0].LogOut__c = logTime;
-                }
-                update usr;
-                // createUserEventInfo(event, logTime, status, usr);
-            }
-        } catch (DmlException e) {
-            System.debug('EXCEPTION: method isPresenceStatusUppdated: \n' + e.getMessage());
+        if(usr.size()>0 && !usr.isEmpty()){
+            usr[0].Presence_Status__c = status;
+            usr[0].Status_Updated__c = logTime;
+            update usr;
         }
     }
 
@@ -67,10 +63,6 @@ public without sharing class ZoomWebhookController {
             update usr;
         }
         if(event == PRESENCE_STATUS){
-            if(status == 'Offline'){ // Get LogOut State from last Offline event
-                usr[0].LogOut__c = logTime;
-                update usr; 
-            }
             eventInfo.Presence_status__c = status;
             eventInfo.Presence_status_time__c = logTime;
         }  

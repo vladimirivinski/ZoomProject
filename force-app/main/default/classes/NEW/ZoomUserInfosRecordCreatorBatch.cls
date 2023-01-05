@@ -13,8 +13,10 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
                 rec.Email__c = u.Email.substringBefore('.invalid'); // NOTE: substring used for devorg!!!
                 rec.Name = u.Name;
                 rec.Presence_Status__c = 'Initial';
-                rec.Status_Updated__c = Datetime.Now();
-                rec.Tracking_Date__c = Date.today();
+                System.debug('<<<<<<<<<<<<<<<<<<<< Datetime.Now() >>>>>>>>>>>>>>>>>>>>>>>>> \n ' + Datetime.Now());
+                System.debug('<<<<<<<<<<<<<<<<<<<< Date.today() >>>>>>>>>>>>>>>>>>>>>>>>> \n ' + Date.today());
+                rec.Status_Updated__c =  Datetime.Now();    // ????????? CONVERT TO PST ??????????
+                rec.Tracking_Date__c =   Date.today();      // ????????? CONVERT TO PST ??????????
                 rec.Available__c = 0;
                 rec.Away__c = 0;
                 rec.In_Calendar_Event__c = 0;
