@@ -53,14 +53,3 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
 // schedules the batch job to run nightly at 0am. - FROM 0 to 23
 // ZoomUserInfosRecordCreatorBatch.start(0);
 
-
-//=====================================================================================================================
-//=====================================================================================================================
-// List<User> lstUsr = [SELECT Id, Name, Email FROM User WHERE isActive = true AND Email LIKE '%@%.com%'];
-// List<Zoom_user__c> zoomUsrLst = new List<Zoom_user__c>();
-// for(User u: lstUsr){
-//     Zoom_user__c usr = new Zoom_user__c();
-//     usr.name = u.name;
-//   	usr.email__c = u.email.substringBefore('.invalid');
-//     zoomUsrLst.add(usr);
-// } insert zoomUsrLst;

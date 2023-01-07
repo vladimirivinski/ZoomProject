@@ -1,6 +1,10 @@
 global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable {
-    
-    public String query = 'SELECT Id, Name, Email__c FROM Zoom_Users_Info__c WHERE Tracking_Date__c = TODAY';
+    // Date used in SOQL get all zoom users records crated today in PST format time
+    static DateTime nowGMT = DateTime.now();
+    static DateTime nowPST = nowGMT.addHours(-8);
+    static final Date PST_DATE = Date.newInstance(nowPST.year(), nowPST.month(), nowPST.day());
+
+    public String query = 'SELECT Id, Name, Email__c FROM Zoom_Users_Info__c WHERE Tracking_Date__c = :PST_DATE';
     global Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
@@ -10,25 +14,22 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         Map<String, Zoom_Phone_Calls_Info__c> orgCallsMap  = new Map<String, Zoom_Phone_Calls_Info__c >();
         Map<String, Zoom_Phone_Calls_Info__c> resultMap = new Map<String, Zoom_Phone_Calls_Info__c>();
         
-        for (Zoom_Users_Info__c usr : scope ){
-        
-            DateTime endTime = DateTime.now();
-            DateTime startTime = DateTime.now();
-            DateTime modifiedDate = startTime.addHours(-1);
-            String strStart = modifiedDate.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
-            String strEnd = startTime.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
-            // =================================================================
-            // System.debug(' \n =-=-=-=-=-=-=-=-= endTime -=-=-=-=-=-=-=-=-= \n ' + endTime);
-            // System.debug(' \n =-=-=-=-=-=-=-=-= modifiedDate -=-=-=-=-=-=-=-=-= \n ' + modifiedDate);
-            // System.debug(' \n =-=-=-=-=-=-=-=-= strStart -=-=-=-=-=-=-=-=-= \n ' + strStart);
-            // System.debug(' \n =-=-=-=-=-=-=-=-= strEnd -=-=-=-=-=-=-=-=-= \n ' + strEnd);
-            // =================================================================
+        List<Zoom_Phone_Calls_Info__c> result = new List<Zoom_Phone_Calls_Info__c>();
 
-            String fromTime = '?from=' + strStart;
-            String toTime = '&to=' + strEnd ;
-            String pageSize = '&page_size=300';
+        for (Zoom_Users_Info__c usr : scope ){
             String address = 'callout:ZoomPhone/phone/users/'+usr.Email__c+'/call_logs';
+            
+            DateTime now = DateTime.now();
+            DateTime prevHour = now.addHours(-1);
+            // DateTime prev10Mins = now.addMinutes(-20);
+            String fromStr = prevHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+            String toStr = now.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+            String fromTime = '?from=' + fromStr;
+            String toTime = '&to=' + toStr ;
+            
+            String pageSize = '&page_size=300';
             String url = address + fromTime + toTime + pageSize;
+
             HttpRequest req = new HttpRequest();
             req.setMethod('GET');
             req.setHeader('Content-type', 'application/json');
@@ -64,6 +65,7 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
                                 info.Outbound_Call__c = val.direction;
                                 info.Outbound_Call_Duration__c = val.duration/60;
                             }
+                            // result.add(info);
                             callMap.put(info.Call_Id__c, info);
                         }
                 }
@@ -72,8 +74,9 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
                 }
             }
         }
+        // insert result;
         
-        for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, CreatedDate FROM Zoom_Phone_Calls_Info__c z WHERE CreatedDate = TODAY]){ 
+        for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, Call_Date_Time__c FROM Zoom_Phone_Calls_Info__c z WHERE Call_Date_Time__c = TODAY]){ 
             orgCallsMap.put(calls.Call_Id__c, calls);
         }
         // //TODO: Create handler  and converter
