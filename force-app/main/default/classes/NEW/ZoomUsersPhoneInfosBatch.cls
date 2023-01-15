@@ -1,10 +1,11 @@
 global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable {
     // Date used in SOQL get all zoom users records crated today in PST format time
-    static DateTime nowGMT = DateTime.now();
-    static DateTime nowPST = nowGMT.addHours(-8);
-    static final Date PST_DATE = Date.newInstance(nowPST.year(), nowPST.month(), nowPST.day());
+    // static DateTime nowGMT = DateTime.now();
+    // static DateTime nowPST = nowGMT.addHours(-8);
+    // static final Date PST_DATE = Date.newInstance(nowPST.year(), nowPST.month(), nowPST.day());
 
-    public String query = 'SELECT Id, Name, Email__c FROM Zoom_Users_Info__c WHERE Tracking_Date__c = :PST_DATE';
+    // public String query = 'SELECT Id, Name, Email__c FROM Zoom_Users_Info__c WHERE Tracking_Date__c >= :PST_DATE';
+    public String query = 'SELECT Id, Name, Email__c FROM Zoom_Users_Info__c WHERE CreatedDate = TODAY';
     global Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
@@ -21,7 +22,7 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
             
             DateTime now = DateTime.now();
             DateTime prevHour = now.addHours(-1);
-            // DateTime prev10Mins = now.addMinutes(-20);
+            // DateTime prev10Mins = now.addMinutes(-10);
             String fromStr = prevHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
             String toStr = now.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
             String fromTime = '?from=' + fromStr;
@@ -56,6 +57,7 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
                             // has_recording : false || null - deprecated
                             info.Call_Result__c = val.result;
                             info.has_recording__c = val.recording_type != null ? true : false;
+                            info.recording_Id__c = val.recording_id != null ? val.recording_id : null;
                             if(val.direction == 'inbound'){
                                 info.Inbound_Call__c = val.direction;
                                 info.Inbound_Call_Duration__c = val.duration/60; // CHECK !!!!
@@ -76,7 +78,8 @@ global with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         }
         // insert result;
         
-        for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, Call_Date_Time__c FROM Zoom_Phone_Calls_Info__c z WHERE Call_Date_Time__c = TODAY]){ 
+        // for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, Call_Date_Time__c FROM Zoom_Phone_Calls_Info__c z WHERE Call_Date_Time__c = TODAY]){ 
+        for(Zoom_Phone_Calls_Info__c calls :[SELECT z.Call_Id__c, z.id, Name, Call_Date_Time__c FROM Zoom_Phone_Calls_Info__c z WHERE CreatedDate = TODAY]){ 
             orgCallsMap.put(calls.Call_Id__c, calls);
         }
         // //TODO: Create handler  and converter

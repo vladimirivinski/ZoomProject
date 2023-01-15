@@ -35,6 +35,7 @@ public with sharing class ZooomUserResponseWrapper {
 		public String cost_center;	//
 		public String recording_type;
 		public cls_forwarded_by forwarded_by;
+		public String recording_id;
 	}
 	class cls_forwarded_by {
 		public String name;	//CE Employer Q
