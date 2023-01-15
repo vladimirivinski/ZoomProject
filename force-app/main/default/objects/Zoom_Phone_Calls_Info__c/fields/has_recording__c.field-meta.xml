@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>has_recording__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Phone call has recording</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Phone call has recording</inlineHelpText>
+    <label>Has Recording</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
