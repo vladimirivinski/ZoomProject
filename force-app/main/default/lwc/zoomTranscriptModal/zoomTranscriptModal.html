@@ -5,22 +5,22 @@
     </lightning-modal-header>
     <template if:true={isLoading}>
         <lightning-modal-body>
-                <template for:each={callLog} for:item="log">
-                    <div class="log_devider" key={log.ts}>
-                        <strong>Speaker(s): {log.speaker}</strong>
-                        <span class="ts-font"> ({log.ts}) </span>
-                        <p>- {log.text}</p>
-                    </div>
-                </template>
+            <template for:each={callLog} for:item="log">
+                <div class="log_devider" key={log.ts}>
+                    <strong>Speaker(s): {log.speaker}</strong>
+                    <span class="ts-font"> ({log.ts}) </span>
+                    <p>- {log.text}</p>
+                </div>
+            </template>
         </lightning-modal-body>
     </template>
     <template if:false={isLoading}>
-        <template if:false={recordingAvaileble}>
+        <template if:false={recordingAvailable}>
             <div class="holder">
                 <lightning-spinner alternative-text="Loading..." variant="brand" size="medium"></lightning-spinner>
             </div>
         </template>
-        <template if:true={recordingAvaileble}>
+        <template if:true={recordingAvailable}>
             <div class="slds-align_absolute-center slds-var-p-vertical_x-large">
                 <h2>{emptyResponse}</h2>
             </div>

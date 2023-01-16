@@ -1,15 +1,15 @@
 public without sharing class ZoomUsersInfoTriggerController {
-    public static void checkZoomUserInfoState(List<Zoom_Users_Info__c> newUsr, List<Zoom_Users_Info__c> oldUsr ){
+    public static void checkZoomUserInfoState(List<Zoom_Users_Info__c> newUsr, List<Zoom_Users_Info__c> oldUsr) {
         // System.debug('\n**************** oldUsr **************** \n'+ oldUsr);
         // System.debug('\n**************** newUsr **************** \n'+ newUsr);
         String statusOld = oldUsr[0].Presence_Status__c;
         String statusNew = newUsr[0].Presence_Status__c;
         // System.debug('\n**************** statusNew **************** \n'+ statusNew);
         // System.debug('\n**************** statusOld **************** \n'+ statusOld);
-        if(statusOld != statusNew){
-            DateTime statusModifiedNew = newUsr[0].Status_Updated__c;  // !!!!!!!!!!!!!!!! CHECK THIS
+        if (statusOld != statusNew) {
+            DateTime statusModifiedNew = newUsr[0].Status_Updated__c; // !!!!!!!!!!!!!!!! CHECK THIS
             DateTime statusModifiedOld = oldUsr[0].Status_Updated__c; // !!!!!!!!!!!!!!!! CHECK THIS
-            Integer durationSeconds = Integer.valueOf((statusModifiedNew.getTime() - statusModifiedOld.getTime())/(1000)); // in minutes
+            Integer durationSeconds = Integer.valueOf((statusModifiedNew.getTime() - statusModifiedOld.getTime()) / (1000)); // in minutes
             // System.debug('\n**************** statusModifiedNew **************** \n'+ statusModifiedNew);
             // System.debug('\n**************** statusModifiedOld **************** \n'+ statusModifiedOld);
             // System.debug('\n**************** statusModifiedNew.getTime() **************** \n'+ statusModifiedNew.getTime());
@@ -20,8 +20,7 @@ public without sharing class ZoomUsersInfoTriggerController {
         }
     }
 
-
-    public static void updateZoomUserState(List<Zoom_Users_Info__c> usr, Integer durationSeconds, String statusOld){
+    public static void updateZoomUserState(List<Zoom_Users_Info__c> usr, Integer durationSeconds, String statusOld) {
         switch on statusOld {
             when 'Available' {
                 // System.debug('######### Available ######### /n ');
@@ -55,19 +54,15 @@ public without sharing class ZoomUsersInfoTriggerController {
                 // System.debug('######### Do_Not_Disturb ######### /n ');
                 usr[0].Do_Not_Disturb__c += durationSeconds;
             }
-        } 
+        }
     }
 
-
-    public static void checkFirstUserLogIn(String statusOld, String statusNew, List<Zoom_Users_Info__c> usr, DateTime statusModifiedNew){
-        if(statusOld == 'Initial' && (statusNew == 'Available' || statusNew == 'Away' || statusNew == 'On_Phone_Call' || statusNew == 'In_Meeting' || statusNew == 'Presenting' || statusNew == 'In_Calendar_Event')){
+    public static void checkFirstUserLogIn(String statusOld, String statusNew, List<Zoom_Users_Info__c> usr, DateTime statusModifiedNew) {
+        if (statusOld == 'Initial' && (statusNew == 'Available' || statusNew == 'Away' || statusNew == 'On_Phone_Call' || statusNew == 'In_Meeting' || statusNew == 'Presenting' || statusNew == 'In_Calendar_Event')) {
             usr[0].User_Log_In__c = statusModifiedNew;
-        } 
+        }
     }
-
-
 }
-
 
 // oldUsr
 // (Zoom_Users_Info__c:{Id=a4cDF0000006TbwYAE,
@@ -148,3 +143,4 @@ public without sharing class ZoomUsersInfoTriggerController {
 //      Total_Outbound_Calls_Duration__c=11,
 //      AHT_Inbound__c=3.89,
 //      AHT_Outbound__c=5.50})
+

@@ -1,6 +1,5 @@
 @RestResource(urlMapping='/zoomhooks/*')
 global without sharing class WebhookController {
-    
     @HttpPost
     global static void handleWebhook() {
         RestRequest req = RestContext.request;
@@ -9,9 +8,8 @@ global without sharing class WebhookController {
         WebhookController.generateSignature(req, res, requestBody);
     }
 
-
-     private static void generateSignature(RestRequest req, RestResponse res, String requestBody) {
-        String ZOOM_WEBHOOK_SECRET_TOKEN  = 'LNAZUD7aSHyLWz-vhC8OHw';
+    private static void generateSignature(RestRequest req, RestResponse res, String requestBody) {
+        String ZOOM_WEBHOOK_SECRET_TOKEN = 'LNAZUD7aSHyLWz-vhC8OHw';
         Map<String, Object> response;
 
         String message = 'v0:' + req.headers.get('x-zm-request-timestamp') + ':' + requestBody;
@@ -19,42 +17,28 @@ global without sharing class WebhookController {
         String hashForVerify = EncodingUtil.convertToHex(mac);
         String signature = 'v0=' + hashForVerify;
 
-        ReqBody reqBody = (ReqBody)JSON.deserialize(requestBody, ReqBody.class);
-        String event = (String)reqBody.event;
-        String plainToken = (String)reqBody.payload.plainToken;
-        
+        ReqBody reqBody = (ReqBody) JSON.deserialize(requestBody, ReqBody.class);
+        String event = (String) reqBody.event;
+        String plainToken = (String) reqBody.payload.plainToken;
 
         if (req.headers.get('x-zm-signature') == signature) {
             if (event == 'endpoint.url_validation') {
                 Blob mac1 = Crypto.generateMac('HmacSHA256', Blob.valueOf(plainToken), Blob.valueOf(ZOOM_WEBHOOK_SECRET_TOKEN));
                 String hashForValidate = EncodingUtil.convertToHex(mac1);
-                response = new Map<String, Object>{
-                    'message' => new Map<String, String>{
-                        'plainToken' => plainToken,
-                        'encryptedToken' => hashForValidate
-                    },
-                    'status' => 200
-                };
-                res.statusCode = (Integer)response.get('status');
+                response = new Map<String, Object>{ 'message' => new Map<String, String>{ 'plainToken' => plainToken, 'encryptedToken' => hashForValidate }, 'status' => 200 };
+                res.statusCode = (Integer) response.get('status');
                 res.responseBody = Blob.valueOf(JSON.serialize(response.get('message')));
-            } 
-            else  {
-                response = new Map<String, Object>{
-                    'message' => 'Authorized request to Webhook.',
-                    'status' => 200
-                };
-                res.statusCode = (Integer)response.get('status');
+            } else {
+                response = new Map<String, Object>{ 'message' => 'Authorized request to Webhook.', 'status' => 200 };
+                res.statusCode = (Integer) response.get('status');
                 res.responseBody = Blob.valueOf(JSON.serialize(response.get('response')));
                 // TODO: Refactore
-                Map<String,Object> respMap = (Map<String,Object>)JSON.deserializeUntyped(requestBody);
+                Map<String, Object> respMap = (Map<String, Object>) JSON.deserializeUntyped(requestBody);
                 ZoomWebhookController.checkZoomEvent(respMap);
             }
         } else {
-            response = new Map<String, Object>{
-                'message' => 'Unauthorized request to Webhook.',
-                'status' => 401
-            };
-            res.statusCode = (Integer)response.get('status');
+            response = new Map<String, Object>{ 'message' => 'Unauthorized request to Webhook.', 'status' => 401 };
+            res.statusCode = (Integer) response.get('status');
             res.responseBody = Blob.valueOf(JSON.serialize(response.get('response')));
         }
     }
@@ -65,7 +49,4 @@ global without sharing class WebhookController {
     public class Payload {
         public String plainToken;
     }
-  
-
 }
-
