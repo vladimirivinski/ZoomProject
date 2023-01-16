@@ -21,7 +21,6 @@ export default class ZoomTranscriptModal extends LightningElement {
     wiredPhoneCallInfo({ error, data }) {
         if (data?.fields) {
             this.queriedFields = data?.fields;
-            this.recordingAvailable = this.recordingId === null ? true : false;
         } else {
             this.error = error;
         }
@@ -75,7 +74,6 @@ export default class ZoomTranscriptModal extends LightningElement {
                 ts: e.ts
             };
         });
-        console.log("++++++++", this.callLog);
     }
 
     //==========================================HANDLERS===============================
