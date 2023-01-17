@@ -1,7 +1,7 @@
 public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Batchable<sObject>, schedulable {
     public Database.QueryLocator start(Database.BatchableContext bc) {
         // NOTE: Retrieve Active users from org
-        // String query = 'SELECT Id, Name, Email FROM User WHERE isActive = true  AND Email LIKE \'%@myubiquity.com%\'';
+        // String query = 'SELECT Id, Name, Email FROM User WHERE isActive = true AND CallCenterId != null AND Email LIKE \'%@myubiquity.com%\'';
         String query = 'SELECT Id, Name, Email FROM User WHERE isActive = true AND CallCenterId != null AND (Email LIKE \'%@myubiquity.com%\' OR Email = \'mchapa@myubiquity.com\')';
         return Database.getQueryLocator(query);
     }
@@ -13,8 +13,6 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
             rec.Email__c = u.Email.substringBefore('.invalid'); // NOTE: substring used for devorg!!!
             rec.Name = u.Name;
             rec.Presence_Status__c = 'Initial';
-            System.debug('<<<<<<<<<<<<<<<<<<<< Datetime.Now() >>>>>>>>>>>>>>>>>>>>>>>>> \n ' + Datetime.Now());
-            System.debug('<<<<<<<<<<<<<<<<<<<< Date.today() >>>>>>>>>>>>>>>>>>>>>>>>> \n ' + Date.today());
             rec.Status_Updated__c = Datetime.Now(); // ????????? CONVERT TO PST ??????????
             rec.Tracking_Date__c = Date.today(); // ????????? CONVERT TO PST ??????????
             rec.Available__c = 0;
@@ -29,12 +27,11 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
         }
         insert result;
     }
-    public void finish(Database.BatchableContext bc) {
-    }
+    public void finish(Database.BatchableContext bc) {}
 
     //NOTE: Schedule interface
     public static void start(Integer hour) {
-        string jobName = 'Zoom Users Info Create Records';
+        String jobName = 'Zoom Users Info Create Records';
         if (hour == 7)
             Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
         else {

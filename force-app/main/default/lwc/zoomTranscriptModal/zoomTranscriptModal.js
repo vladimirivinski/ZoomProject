@@ -74,6 +74,7 @@ export default class ZoomTranscriptModal extends LightningElement {
                 ts: e.ts
             };
         });
+        // console.log("====================this.callLog:", this.callLog);
     }
 
     //==========================================HANDLERS===============================
