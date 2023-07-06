@@ -1,0 +1,59 @@
+| Field                            | Type                              |
+|----------------------------------|-----------------------------------|
+| id                               | integer ($int64)                  |
+| companyId                        | integer ($int64)                  |
+| status                           | string                            |
+|                                  | Enum: [EFFECTIVE, DEACTIVATED, TERMINATED, UNDER_CONSTRUCTION, ACTIVE, DECONVERTED, CLOSED] |
+| planType                         | string                            |
+|                                  | Enum: [_401K, _IRA, _SIMPLE_IRA]  |
+| purchaseDate                     | string ($date)                    |
+| planName                         | string                            |
+| requiredAge                      | AgeModel                          |
+|   - month                        | integer ($int32)                  |
+|   - year                         | integer ($int32)                  |
+| autoEnrollmentType               | string                            |
+|                                  | Enum: [QACA, EACA, ACA]            |
+| autoDeferralType                 | string                            |
+|                                  | Enum: [ESCALATING, FLAT]           |
+| minimumAutoDeferralPercentage    | number                            |
+| maximumAutoDeferralPercentage    | number                            |
+| yearlyAutoDeferralPercentageIncrease | number                         |
+| employerPaidParticipantFees      | boolean                           |
+| entry                            | string                            |
+|                                  | Enum: [DAILY, MONTHLY, QUARTERLY, SEMI_ANNUALLY, ANNUALLY] |
+| serviceEligibility               | string                            |
+|                                  | Enum: [IMMEDIATE, ONE_MONTH, TWO_MONTHS, THREE_MONTHS, SIX_MONTHS, TWELVE_MONTHS, ONE_YEAR_HOURS] |
+| advisor                          | AdvisorPlanModel                  |
+|   - advisorFeeCollectionSource   | string                            |
+|                                  | Enum: [NONE, BROKER_12B_1, INVOICE, DIRECT, ASSETS] |
+|   - fixedAmount                  | number                            |
+|   - bpsAmount                    | number                            |
+|   - requireReview                | boolean                           |
+|   - advisorNpn                   | string                            |
+|   - advisorCrd                   | string                            |
+| sponsorFirstName*                | string                            |
+| sponsorLastName*                 | string                            |
+| sponsorEmail*                    | string                            |
+| stateCode*                       | string                            |
+| custodian                        | string                            |
+| allowsLoans                      | boolean                           |
+| allowsHardshipWithdrawals        | boolean                           |
+| purchaseLink                     | string                            |
+| sources                          | array of ProductSourceModel        |
+|   - id                           | integer ($int64)                  |
+|   - name                         | string                            |
+|   - sourceType                   | string                            |
+|                                  | Enum: [DEFERRAL, LOAN, MATCH, PROFIT, RELATED_ROLLOVER, ROLLOVER, SAFE, QMAC, QNEC] |
+|   - contributorType              | string                            |
+|                                  | Enum: [EMPLOYEE, EMPLOYER, LOAN]   |
+|   - vestingId                    | integer ($int64)                  |
+|   - requiredAge                  | AgeModel                          |
+|       - month                    | integer ($int32)                  |
+|       - year                     | integer ($int32)                  |
+|   - entry                        | string                            |
+|                                  | Enum: [DAILY, MONTHLY, QUARTERLY, SEMI_ANNUALLY, ANNUALLY, OTHER] |
+|   - serviceEligibility           | string                            |
+|                                  | Enum: [IMMEDIATE, ONE_MONTH, TWO_MONTHS, THREE_MONTHS, SIX_MONTHS, TWELVE_MONTHS, ONE_YEAR_HOURS]
+
+
+Created, Saved/Shared, Submitted for Purchase, Updated, Changes, In Progress, Purchased, Incomplete, Expired, Save/Share

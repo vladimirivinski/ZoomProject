@@ -1,0 +1,74 @@
+<template>
+	
+    <lightning-card  title="Picklist dependent fields checker.">
+        <lightning-button label="Refresh" slot="actions" variant="destructive-text" onclick={handleRefresh}></lightning-button>
+        <p class="slds-p-horizontal_small"> Select options:</p>
+        
+        <!-- Object -->
+        <div class="slds-p-horizontal_small">
+            <lightning-combobox
+                name="progress"
+                label="Object:"
+                value={selectedObjectValue}
+                placeholder="Select"
+                options={options}
+                onchange={handleChangeObject}
+            ></lightning-combobox>
+        </div>
+        <!-- Record Type -->
+        <div class="slds-p-horizontal_small">
+            <lightning-combobox
+                label="Record Types"
+                options={recordTypeOptions}
+                value={selectedRecordTypeName}
+                placeholder="Select a record type"
+                onchange={handleRecordTypeChange}>
+            </lightning-combobox>
+        </div>
+        <!-- Dependent field First stage -->
+        <div class="slds-p-horizontal_small">
+            <lightning-combobox 
+                name="fieldList" 
+                label='Dependent Fields List'
+                value={selectedFieldFirstStage} 
+                options={firstStageFields} 
+                placeholder="Select Field"
+                onchange={handleChangeFirstStageField}>
+            </lightning-combobox>
+        </div>
+
+        <c-combo-box-component></c-combo-box-component>
+
+        <!-- Controlling field Second stage  -->
+        <template if:true={isControlingField}>
+            <div class="slds-p-horizontal_small">
+                <lightning-combobox 
+                    name="Controlingfield" 
+                    label='Controlling field'
+                    value={selectedSecondFirstStage} 
+                    options={secondStageFields} 
+                    placeholder="Select Field"
+                    onchange={handleChangeSecondStageField}>
+                </lightning-combobox>
+            </div>
+        </template>
+
+        <!-- Controlling field third -->
+        <template if:true={isControlingFieldSecondStage}>
+            <div class="slds-p-horizontal_small">
+                <lightning-combobox 
+                    name="Controlingfield" 
+                    label='Controlling field'
+                    value={selectedFieldThirdStage} 
+                    options={thirdStageFields} 
+                    placeholder="Select Field"
+                    onchange={handleChangeThirdStageField}>
+                </lightning-combobox>
+            </div>
+        </template>
+
+        <div slot="footer">
+            <lightning-button label="Search" variant="success" onclick={submitHandlerButton}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

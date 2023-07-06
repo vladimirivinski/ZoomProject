@@ -1,0 +1,287 @@
+<!-- <form action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST">
+    <input type="hidden" name="oid" value="00D7A000000BQAs"> -->
+<form
+	action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
+	method="POST"
+>
+	<input type="hidden" name="oid" value="00D00000000hXNr" />
+	<input
+		type="hidden"
+		name="retURL"
+		value="http://cloud.email.myubiquity.com/mylo"
+	/>
+
+	<!-- Auto Assign the LeadSource = Insurance -->
+	<select hidden="" name="lead_source">
+		<option value="Insurance" selected="selected"></option>
+	</select>
+	<!-- Auto Assign the Country = US -->
+	<select hidden="" name="country_code">
+		<option value="US" selected="selected"></option>
+	</select>
+	<!-- Auto Assign the Product_Type__c = 401(k) -->
+	<input hidden="" name="00N37000005jnjw" value="401(k)" />
+	<!-- Auto Assign the Method_of_First_Contact__c = Partner Referral -->
+	<input type="hidden" name="00N00000008psyL" value="Partner Referral" />
+	<!-- Auto Assign the Lead_Origin__c = Ubiquity Generated -->
+	<input type="hidden" name="00N37000006NUyW" value="Ubiquity Generated" />
+
+	<input
+		maxlength="40"
+		name="first_name"
+		size="20"
+		type="text"
+		required=""
+		placeholder="First Name*"
+		style="
+			padding: 8px;
+			margin: 5px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<input
+		maxlength="80"
+		name="last_name"
+		size="20"
+		type="text"
+		required=""
+		placeholder="Last Name*"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<input
+		maxlength="80"
+		name="email"
+		size="20"
+		type="text"
+		required=""
+		placeholder="Email*"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<input
+		maxlength="40"
+		name="phone"
+		size="20"
+		type="text"
+		placeholder="Phone"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<input
+		maxlength="40"
+		name="company"
+		size="20"
+		type="text"
+		required=""
+		placeholder="Company*"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+	<input
+		maxlength="3"
+		name="employees"
+		size="20"
+		type="text"
+		required=""
+		placeholder="Number of employees*"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<select
+		name="state_code"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 342px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	>
+		<option value="" disabled="" selected="" hidden="">State</option>
+		<option value="AK">AK (Alaska)</option>
+		<option value="AL">AL (Alabama)</option>
+		<option value="AR">AR (Arkansas)</option>
+		<option value="AZ">AZ (Arizona)</option>
+		<option value="CA">CA (California)</option>
+		<option value="CO">CO (Colorado)</option>
+		<option value="CT">CT (Connecticut)</option>
+		<option value="DE">DE (Delaware)</option>
+		<option value="FL">FL (Florida)</option>
+		<option value="GA">GA (Georgia)</option>
+		<option value="HI">HI (Hawaii)</option>
+		<option value="IA">IA (Iowa)</option>
+		<option value="ID">ID (Idaho)</option>
+		<option value="IL">IL (Illinois)</option>
+		<option value="IN">IN (Indiana)</option>
+		<option value="KS">KS (Kansas)</option>
+		<option value="KY">KY (Kentucky)</option>
+		<option value="LA">LA (Louisiana)</option>
+		<option value="MA">MA (Massachusetts)</option>
+		<option value="MD">MD (Maryland)</option>
+		<option value="ME">ME (Maine)</option>
+		<option value="MI">MI (Michigan)</option>
+		<option value="MN">MN (Minnesota)</option>
+		<option value="MO">MO (Missouri)</option>
+		<option value="MS">MS (Mississippi)</option>
+		<option value="MT">MT (Montana)</option>
+		<option value="NC">NC (North Carolina)</option>
+		<option value="ND">ND (North Dakota)</option>
+		<option value="NE">NE (Nebraska)</option>
+		<option value="NH">NH (New Hampshire)</option>
+		<option value="NJ">NJ (New Jersey)</option>
+		<option value="NM">NM (New Mexico)</option>
+		<option value="NV">NV (Nevada)</option>
+		<option value="NY">NY (New York)</option>
+		<option value="OH">OH (Ohio)</option>
+		<option value="OK">OK (Oklahoma)</option>
+		<option value="OR">OR (Oregon)</option>
+		<option value="PA">PA (Pennsylvania)</option>
+		<option value="RI">RI (Rhode Island)</option>
+		<option value="SC">SC (South Carolina)</option>
+		<option value="SD">SD (South Dakota)</option>
+		<option value="TN">TN (Tennessee)</option>
+		<option value="TX">TX (Texas)</option>
+		<option value="UT">UT (Utah)</option>
+		<option value="VA">VA (Virginia)</option>
+		<option value="VT">VT (Vermont)</option>
+		<option value="WA">WA (Washington)</option>
+		<option value="WI">WI (Wisconsin)</option>
+		<option value="WV">WV (West Virginia)</option>
+		<option value="WY">WY (Wyoming)</option></select
+	><br />
+
+	<!-- LeadSourceDetail__c   aka PARTNER-->
+	<select
+		id="00N00000008psek"
+		name="00N00000008psek"
+		required=""
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 342px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	>
+		<option value="" disabled="" selected="" hidden="">Partner*</option>
+		<option value="Mylo">Mylo</option>
+		<option value="Mylo/LegalZoom">LegalZoom</option>
+		<option value="Mylo/Lockton">Lockton</option>
+		<option value="Mylo/Mployer Advisor">Mployer Advisor</option>
+		<option value="Mylo/NAV">NAV</option>
+		<option value="Mylo/Newity">Newity</option>
+		<option value="Mylo/Steak 'n Shake">Steak 'n Shake</option>
+		<option value="Mylo/Texas Association of Builders">
+			Texas Association of Builders
+		</option>
+		<option value="Mylo/United Wholesale Mortgage">
+			United Wholesale Mortgage
+		</option></select
+	><br />
+
+	<!-- Referral_Info_Last_Name__c -->
+	<input
+		id="00N1G000007UOkW"
+		name="00N1G000007UOkW"
+		type="text"
+		wrap="soft"
+		placeholder="Referrer name"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<!-- Referrer_s_Email__c -->
+	<input
+		id="00N37000005A3K1"
+		maxlength="80"
+		name="00N37000005A3K1"
+		size="20"
+		type="text"
+		placeholder="Referrer email"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+		"
+	/><br />
+
+	<!-- Lead_Notes__c -->
+	<style>
+		textarea::placeholder{
+			color:black;
+		}
+	</style>
+	<textarea
+		id="00N00000008pumM"
+		name="00N00000008pumM"
+		size="600"
+		rows="4"
+		type="textarea"
+		placeholder="Notes"
+		style="
+			padding: 8px;
+			margin: 10px 20px 0px 36px;
+			width: 325px;
+			border-width: 1px;
+			border-radius: 5px;
+			font-family: Arial, sans-serif;
+		"
+	></textarea
+	><br />
+
+	<!-- Submit Button -->
+	<input
+		type="submit"
+		name="submit"
+		style="
+			padding: 5px;
+			margin: 20px 20px 70px 36px;
+			width: 150px;
+			height: 35px;
+			border: #ff8200;
+			border-radius: 20px;
+			background-color: #ff8200;
+			color: white;
+		"
+	/>
+</form>

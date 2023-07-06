@@ -5,6 +5,7 @@
     "**/.sfdx": true
   },
   "cSpell.words": [
+    "Controlingfield",
     "undelete"
   ],
   "salesforcedx-vscode-core.show-cli-success-msg": false
