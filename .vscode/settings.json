@@ -8,5 +8,10 @@
     "Controlingfield",
     "undelete"
   ],
-  "salesforcedx-vscode-core.show-cli-success-msg": false
+  "salesforcedx-vscode-core.show-cli-success-msg": false,
+  "workbench.colorCustomizations": {
+    "terminal.foreground": "#eeff00",
+    "statusBar.background": "#4444444"
+  },
+  "editor.bracketPairColorization.enabled": true
 }

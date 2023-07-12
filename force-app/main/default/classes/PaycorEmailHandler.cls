@@ -149,7 +149,7 @@ global class PaycorEmailHandler implements Messaging.InboundEmailHandler {
 			Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
 			List<String> toAddresses = new List<String>{'moe.chapa.test@gmail.com'};
 			mail.setToAddresses(toAddresses);
-			mail.setReplyTo('moe.chapa.test@gmail.com');
+			mail.setReplyTo('bi@myubiquity.com');
 			mail.setSenderDisplayName('Apex Error Message - createLeadFromPaycorEmail()');
 			mail.setSubject('Error from Org : ' + UserInfo.getOrganizationName());
 			mail.setPlainTextBody(e.getMessage() + '\n' + htmlBodyEmail);
