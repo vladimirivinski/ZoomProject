@@ -11,8 +11,8 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
 
             Zoom_Users_Info__c rec = new Zoom_Users_Info__c();
             rec.User__c = u.id;
-            // rec.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
-            rec.Email__c = u.Email;
+            rec.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
+            // rec.Email__c = u.Email;
             rec.Name = u.Name;
             rec.OwnerId = u.id;  // Used for assign record to related user
             rec.Presence_Status__c = 'Initial';

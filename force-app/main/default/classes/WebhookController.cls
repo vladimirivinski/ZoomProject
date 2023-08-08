@@ -39,6 +39,7 @@ global with sharing class WebhookController {
             res.statusCode = (Integer) response.get('status');
             res.responseBody = Blob.valueOf(JSON.serialize(response.get('response')));
         }
+        System.debug('response: ' + response);
     }
     public class ReqBody {
         public String event;
