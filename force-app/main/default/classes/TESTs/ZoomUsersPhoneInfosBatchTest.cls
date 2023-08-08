@@ -1,4 +1,0 @@
-@isTest
-private class ZoomUsersPhoneInfosBatchTest {
-
-}
