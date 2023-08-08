@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Call_Duration__c</fullName>
+    <description>Call duration in mm:ss format from seconds</description>
+    <externalId>false</externalId>
+    <formula>IF(ISBLANK(Inbound_Call_Duration__c),null,
+ 
+
+IF(FLOOR(Inbound_Call_Duration__c/60)&lt;10, &quot;00:0&quot;&amp; TEXT(FLOOR(Inbound_Call_Duration__c/60)), &quot;00:&quot; &amp; TEXT(FLOOR(Inbound_Call_Duration__c/60)))
+&amp;&quot;:&quot; &amp;
+IF( MOD(Inbound_Call_Duration__c,60)&lt;10, &quot;0&quot;&amp; TEXT(MOD(Inbound_Call_Duration__c,60)), TEXT(MOD(Inbound_Call_Duration__c,60))) &amp;&quot;&quot;
+
+)</formula>
+    <label>Call Duration (Inbound)</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

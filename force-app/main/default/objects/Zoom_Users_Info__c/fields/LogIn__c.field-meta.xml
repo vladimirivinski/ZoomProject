@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LogIn__c</fullName>
+    <externalId>false</externalId>
+    <label>LogIn</label>
+    <summarizedField>Zoom_Event_Info__c.Log_In__c</summarizedField>
+    <summaryForeignKey>Zoom_Event_Info__c.Zoom_Users_Info__c</summaryForeignKey>
+    <summaryOperation>min</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

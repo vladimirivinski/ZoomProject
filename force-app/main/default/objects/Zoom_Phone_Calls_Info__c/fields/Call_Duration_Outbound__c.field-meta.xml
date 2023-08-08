@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Call_Duration_Outbound__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(ISBLANK( Outbound_Call_Duration__c ),null,
+ 
+IF(FLOOR(Outbound_Call_Duration__c/60)&lt;10, &quot;00:0&quot;&amp; TEXT(FLOOR(Outbound_Call_Duration__c/60)), &quot;00:&quot; &amp; TEXT(FLOOR(Outbound_Call_Duration__c/60)))
+&amp;&quot;:&quot; &amp;
+
+IF( MOD(Outbound_Call_Duration__c,60)&lt;10, &quot;0&quot;&amp; TEXT(MOD(Outbound_Call_Duration__c,60)), TEXT(MOD(Outbound_Call_Duration__c,60))) &amp;&quot;&quot;
+
+)</formula>
+    <label>Call Duration (Outbound)</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

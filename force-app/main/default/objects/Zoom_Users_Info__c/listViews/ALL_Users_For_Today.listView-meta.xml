@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ALL_Users_For_Today</fullName>
+    <columns>Tracking_Date__c</columns>
+    <columns>NAME</columns>
+    <columns>Presence_Status__c</columns>
+    <columns>Total_Inbound_Calls__c</columns>
+    <columns>Total_Outbound_Calls__c</columns>
+    <columns>LogIn__c</columns>
+    <columns>LogOut__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Tracking_Date__c</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>ALL Users For Today</label>
+</ListView>

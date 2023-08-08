@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Test_CL</fullName>
+    <fields>AHT_Inbound__c</fields>
+    <fields>AHT_Outbound__c</fields>
+    <fields>Available__c</fields>
+    <fields>Away__c</fields>
+    <fields>CreatedById</fields>
+    <fields>Do_Not_Disturb__c</fields>
+    <label>Test CL</label>
+</CompactLayout>

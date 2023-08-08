@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Offline__c</fullName>
+    <description>Total offline time per day.</description>
+    <externalId>false</externalId>
+    <formula>IF(ISBLANK( Offline__c ),null,
+
+
+IF((MOD(( Offline__c /60)/60,1)*60) &gt;= 10,
+
+
+TEXT(FLOOR( ( Offline__c/60 )/60)) + &quot;h : &quot; + TEXT( FLOOR(MOD(( Offline__c/60 )/60,1)*60)) +&quot;min&quot;,
+
+
+TEXT(FLOOR( ( Offline__c/60 )/60)) + &quot;h : 0&quot; + TEXT( FLOOR(MOD(( Offline__c/60 )/60,1)*60)) +&quot;min&quot;
+
+
+))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Total offline time per day.</inlineHelpText>
+    <label>Total Offline</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

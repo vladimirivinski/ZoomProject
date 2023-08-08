@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hold_Time_hh_mm_ss__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(ISBLANK(Hold_Time__c),null,
+
+IF(FLOOR( Hold_Time__c /60)&lt;10, &quot;00:0&quot;&amp; TEXT(FLOOR(Hold_Time__c /60)), TEXT(FLOOR(Hold_Time__c /60)))
+&amp;&quot;:&quot; &amp;
+
+IF( MOD(Hold_Time__c ,60)&lt;10, &quot;&quot;&amp; TEXT(MOD(Hold_Time__c,60)), TEXT(MOD(Hold_Time__c,60))
+
+))</formula>
+    <label>Hold Time (hh:mm:ss)</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AHT_Outbound__c</fullName>
+    <description>Average outbound calls duration per day.</description>
+    <externalId>false</externalId>
+    <formula>TEXT(   MFLOOR(( Total_Outbound_Calls_Duration__c /  Total_Outbound_Calls__c )/60) )+ &quot; min(s)&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Average outbound calls duration per day.</inlineHelpText>
+    <label>AHT Outbound</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
