@@ -1,124 +1,54 @@
 public without sharing class ZoomWebhookController {
-    static final String PRESENCE_STATUS = 'user.presence_status_updated';
-    static final String USER_SIGNED_IN = 'user.signed_in';
-    static final String USER_SIGNED_OUT = 'user.signed_out';
+	static final String PRESENCE_STATUS = 'user.presence_status_updated';
+	static final String USER_SIGNED_IN = 'user.signed_in';
+	static final String USER_SIGNED_OUT = 'user.signed_out';
 
-    static final String CONTACT_CENTER_USER_LOGIN = 'contact_center.user_login';
-    static final String CONTACT_CENTER_USER_LOGOUT = 'contact_center.user_logout';
-    static final String CONTACT_CENTER_USER_STATUS_CHANGED = 'contact_center.user_status_changed';
-
-    // Date used in SOQL get zoom user record crated today in PST format time
-    static DateTime nowGMT = DateTime.now();
-    static DateTime nowPST = nowGMT.addHours(-8);
-    static final Date PST_DATE = Date.newInstance(nowPST.year(), nowPST.month(), nowPST.day());
-
-    static String query = 'SELECT Id, Tracking_Date__c, Email__c, Presence_Status__c, Status_Updated__c, User_Log_In__c, User_Log_Out__c FROM Zoom_Users_Info__c';
-    static String qWhere = ' WHERE Email__c = \'';
-    static String qLimit = '\' AND Tracking_Date__c = :PST_DATE LIMIT 1';
-
-    public static void checkZoomEvent(Map<String, Object> resp) {
-        System.debug('resp====' + resp);
-        String jsonString = JSON.serialize(resp);
-        ResponseWrapper wrapper = populateWrapper(jsonString);
-        System.debug('wrapper::::::::: ' + wrapper);
-
-        String event = wrapper.event;
-        String email = wrapper.payload.obj.email;
-        String status = wrapper.payload.obj.presence_status;
-        DateTime logTime = wrapper.payload.obj.date_time;
+	static final String CONTACT_CENTER_USER_LOGIN = 'contact_center.user_login';
+	static final String CONTACT_CENTER_USER_LOGOUT = 'contact_center.user_logout';
+	static final String CONTACT_CENTER_USER_STATUS_CHANGED = 'contact_center.user_status_changed';
 
 
-        if (event == PRESENCE_STATUS) {
-            isPresenceStatusUpdated(email, status, logTime);
-        } else if (event == USER_SIGNED_IN || event == USER_SIGNED_OUT) {
-            isUserLogInOrOut(email, logTime, event);
-        } else if (event == CONTACT_CENTER_USER_LOGIN) {
+	public static void checkZoomEvent(Map<String, Object> resp) {
+		String jsonString = JSON.serialize(resp);
+		ZoomWebhookHelper.ResponseWrapper wrapper = ZoomWebhookHelper.populateWrapper(jsonString);
+		System.debug('resp====' + resp);
+		System.debug('wrapper::::::::: ' + wrapper);
+		String event            = wrapper.event;
+		String email            = wrapper.payload.obj.email;
+		String ccEmail          = wrapper.payload.obj.user_email;
+		String status           = wrapper.payload.obj.presence_status;
+		String ccStatus         = wrapper.payload.obj.current_status_name;
+		String ccSubStatus      = wrapper.payload.obj.current_sub_status_name;
+		String ccPrevStatus     = wrapper.payload.obj.previous_status_name;
+		String ccPrevSubStatus  = wrapper.payload.obj.previous_sub_status_name;
+		DateTime lastChanged    = wrapper.payload.obj.date_time;
 
-        } else if (event == CONTACT_CENTER_USER_LOGOUT) {
+		if (event == PRESENCE_STATUS) {
+			ZoomWebhookHelper.presenceStatusUpdated(email, status, lastChanged);
+		} else if (event == USER_SIGNED_IN || event == USER_SIGNED_OUT) {
+			ZoomWebhookHelper.userLogIn(email);
+		} else if (event == USER_SIGNED_OUT) {
+			ZoomWebhookHelper.userLogOut(email, lastChanged);
+		} else if (event == CONTACT_CENTER_USER_LOGIN) {
+			ZoomWebhookHelper.contactCenterUserLogin(ccEmail, lastChanged);
+		} else if (event == CONTACT_CENTER_USER_LOGOUT) {
+			ZoomWebhookHelper.contactCenterUserLogout(ccEmail, lastChanged);
+		} else if (event == CONTACT_CENTER_USER_STATUS_CHANGED) {
+			ZoomWebhookHelper.contactCenterUserStatusChanged(ccEmail, ccStatus, ccSubStatus, ccPrevStatus, ccPrevSubStatus);
+		} else {
+			System.debug('Event not found');
+		}
+	}
 
-        } else if (event == CONTACT_CENTER_USER_STATUS_CHANGED) {
-
-        } else {
-            System.debug('Event not found');
-        }
-
-    }
-
-    public static List<Zoom_Users_Info__c> getZoomUser(String email){
-        List<Zoom_Users_Info__c> userList = !Test.isRunningTest() ?
-            Database.query(query + qWhere + email + qLimit) :
-            Database.query(query + qWhere + email + '\'');
-        return userList;
-    }
-
-    public static void isPresenceStatusUpdated(String email, String status, DateTime logTime) {
-        List<Zoom_Users_Info__c> userList = getZoomUser(email);
-        if (userList.size() > 0 && !userList.isEmpty()) {
-            userList[0].Presence_Status__c = status;
-            userList[0].Status_Updated__c = logTime;
-            update userList;
-        }
-    }
-
-    public static void isUserLogInOrOut(String email, DateTime logTime, String event) {
-        List<Zoom_Users_Info__c> userList = getZoomUser(email);
-        try{
-            for (Zoom_Users_Info__c u : userList) {
-                if (userList.size() > 0 && (event == USER_SIGNED_IN)) {
-                    userList[0].Presence_Status__c = 'Available';
-                } else if (userList.size() > 0 && (event == USER_SIGNED_OUT)) {
-                    userList[0].LogOut__c = logTime;
-                    userList[0].Presence_Status__c = 'Offline';
-                }
-            }
-            update userList;
-        }
-        catch (DmlException e) {
-            System.debug('EXCEPTION: method ZoomWebhookController.isUserLogInOrOut: \n ' + e.getMessage());
-        }
-    }
-
-    public static ResponseWrapper populateWrapper(String jsonString) {
-        String jsonStr = jsonString.replace('"object":', '"obj":');
-        ResponseWrapper wrapper = (ResponseWrapper) JSON.deserialize(jsonStr, ResponseWrapper.class);
-        return wrapper;
-    }
-
-    public class ResponseWrapper {
-        String event { get; set; }
-        String event_ts { get; set; }
-        PayloadWrapper payload { get; set; }
-    }
-    public class PayloadWrapper {
-        String account_id { get; set; }
-        ObjectWrapper obj { get; set; }
-    }
-    public class ObjectWrapper {
-        String user_id { get; set; }
-        String display_name { get; set; }
-        String user_email { get; set; }
-        String previous_status_id { get; set; }
-        String previous_status_name { get; set; }
-        String previous_sub_status_id { get; set; }
-        String previous_sub_status_name { get; set; }
-        String current_status_id { get; set; }
-        String current_status_name { get; set; }
-        String current_sub_status_id { get; set; }
-        String current_sub_status_name { get; set; }
-        DateTime date_time { get; set; }
-        String presence_status { get; set; }
-        String email { get; set; }
-        String id { get; set; }
-    }
 
 }
 
 // {
-//     event=user.presence_status_updated, 
-//     event_ts=1691535992008, 
+//     event=user.presence_status_updated,
+//     event_ts=1691535992008,
 //     payload=
 //         {
-//         account_id=kJdQOXj6TXeWcSfh_ysPVQ, 
+//         account_id=kJdQOXj6TXeWcSfh_ysPVQ,
 //         object=
 //             {
 //                 date_time=2023-08-08T23:06:32Z,
@@ -128,7 +58,6 @@ public without sharing class ZoomWebhookController {
 //             }
 //         }
 // }
-
 
 // {
 //   "event": "contact_center.user_status_changed",
@@ -165,6 +94,4 @@ public without sharing class ZoomWebhookController {
 //     }
 //   }
 // }
-
-
 
