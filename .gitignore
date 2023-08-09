@@ -34,7 +34,7 @@ Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
-
+.vscode
 package-lock.json
 
 _environments
