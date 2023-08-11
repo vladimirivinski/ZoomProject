@@ -1,32 +1,34 @@
 public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Batchable<sObject>, schedulable {
     public Database.QueryLocator start(Database.BatchableContext bc) {
         // NOTE: Retrieve Active users from org
-        String query = 'SELECT Id, Name, Email FROM User WHERE isActive = true AND CallCenterId != null';
+        String query = 'SELECT Id, Name, Email, CallCenterId FROM User WHERE isActive = true AND CallCenterId != null';
         return Database.getQueryLocator(query);
     }
     public void execute(Database.BatchableContext bc, List<User> scope) {
 
+        Map<Id, CallCenter> mapCallCenterIdName = new Map<Id, CallCenter>([SELECT Id, Name FROM CallCenter]);
+
         List<Zoom_Users_Info__c> result = new List<Zoom_Users_Info__c>();
         for (User u : scope) {
-
-            Zoom_Users_Info__c rec = new Zoom_Users_Info__c();
-            rec.User__c = u.id;
-            rec.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
-            // rec.Email__c = u.Email;
-            rec.Name = u.Name;
-            rec.OwnerId = u.id;  // Used for assign record to related user
-            rec.Presence_Status__c = 'Initial';
-            rec.Status_Updated__c = Datetime.Now();
-            rec.Tracking_Date__c = Date.today(); 
-            rec.Available__c = 0;
-            rec.Away__c = 0;
-            rec.In_Calendar_Event__c = 0;
-            rec.In_Meeting__c = 0;
-            rec.Offline__c = 0;
-            rec.On_Phone_Call__c = 0;
-            rec.Presenting__c = 0;
-            rec.Do_Not_Disturb__c = 0;
-            result.add(rec);
+            Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
+            zoomUser.User__c = u.id;
+            zoomUser.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
+            // zoomUser.Email__c = u.Email;
+            zoomUser.Name = u.Name;
+            zoomUser.OwnerId = u.id;
+            zoomUser.Presence_Status__c = 'Initial';
+            zoomUser.Status_Updated__c = Datetime.Now();
+            zoomUser.Tracking_Date__c = Date.today(); 
+            zoomUser.Available__c = 0;
+            zoomUser.Away__c = 0;
+            zoomUser.In_Calendar_Event__c = 0;
+            zoomUser.In_Meeting__c = 0;
+            zoomUser.Offline__c = 0;
+            zoomUser.On_Phone_Call__c = 0;
+            zoomUser.Presenting__c = 0;
+            zoomUser.Do_Not_Disturb__c = 0;
+            zoomUser.Call_Center_Member__c = mapCallCenterIdName.get(u.CallCenterId).Name;
+            result.add(zoomUser);
         }
         insert result;
     }
