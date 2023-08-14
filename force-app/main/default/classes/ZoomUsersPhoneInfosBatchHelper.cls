@@ -5,7 +5,7 @@ public with sharing class ZoomUsersPhoneInfosBatchHelper {
         // DateTime prev30Mins = DateTime.now().addMinutes(-30);
         DateTime lastHour = DateTime.now().addHours(-1);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
-        String toStr = now.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
+        String toStr = DateTime.now().formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String fromTime = '?from=' + fromStr;
         String toTime = '&to=' + toStr;
 

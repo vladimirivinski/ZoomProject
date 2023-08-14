@@ -7,27 +7,38 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
     public void execute(Database.BatchableContext bc, List<User> scope) {
 
         Map<Id, CallCenter> mapCallCenterIdName = new Map<Id, CallCenter>([SELECT Id, Name FROM CallCenter]);
+        Map<String, ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> emailToZoomUsersProfileMap = ZoomUserInfosRecordCreatorBatchService.getMapUsersProfiles();
+
 
         List<Zoom_Users_Info__c> result = new List<Zoom_Users_Info__c>();
         for (User u : scope) {
             Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
+
+
+
+
             zoomUser.User__c = u.id;
             zoomUser.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
             // zoomUser.Email__c = u.Email;
-            zoomUser.Name = u.Name;
-            zoomUser.OwnerId = u.id;
-            zoomUser.Presence_Status__c = 'Initial';
-            zoomUser.Status_Updated__c = Datetime.Now();
-            zoomUser.Tracking_Date__c = Date.today(); 
-            zoomUser.Available__c = 0;
-            zoomUser.Away__c = 0;
-            zoomUser.In_Calendar_Event__c = 0;
-            zoomUser.In_Meeting__c = 0;
-            zoomUser.Offline__c = 0;
-            zoomUser.On_Phone_Call__c = 0;
-            zoomUser.Presenting__c = 0;
-            zoomUser.Do_Not_Disturb__c = 0;
-            zoomUser.Call_Center_Member__c = mapCallCenterIdName.get(u.CallCenterId).Name;
+            zoomUser.Name                     = u.Name;
+            zoomUser.OwnerId                  = u.id;
+            zoomUser.Presence_Status__c       = 'Initial';
+            zoomUser.Status_Updated__c        = Datetime.Now();
+            zoomUser.Tracking_Date__c         = Date.today();
+            zoomUser.Available__c             = 0;
+            zoomUser.Away__c                  = 0;
+            zoomUser.In_Calendar_Event__c     = 0;
+            zoomUser.In_Meeting__c            = 0;
+            zoomUser.Offline__c               = 0;
+            zoomUser.On_Phone_Call__c         = 0;
+            zoomUser.Presenting__c            = 0;
+            zoomUser.Do_Not_Disturb__c        = 0;
+            zoomUser.Call_Center_Member__c    = mapCallCenterIdName.get(u.CallCenterId).Name;
+
+            zoomUser.Zoom_User_Id__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).id;
+            zoomUser.Zoom_Department__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).department;
+            zoomUser.Extension_Id__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).extension_id;
+            zoomUser.Extension_Number__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).extension_number;
             result.add(zoomUser);
         }
         insert result;
