@@ -7,7 +7,7 @@ public with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         Map<String, Zoom_Phone_Calls_Info__c> callsIdZoomInfoMap = new Map<String, Zoom_Phone_Calls_Info__c>();
 
         for (Zoom_Users_Info__c usr : scope) {
-            HttpResponse res = ZoomUsersPhoneBatchService.zoomPhoneCallsCallout(usr.email__c);
+            HttpResponse res = ZoomUsersPhoneService.zoomPhoneCallsCallout(usr.email__c);
             // System.debug(' \n ^^^^^^^^^^^^^^^^^^^^ RESPONSE BODY ^^^^^^^^^^^^^^^^^^^^ \n' + res.getBody());
             if (res.getStatusCode() == 200) {
                 ZoomUsersPhoneEntity wrappedResponse = ZoomUsersPhoneEntity.parse(res.getBody());
@@ -45,7 +45,7 @@ public with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
             }
         }
 
-        List<Zoom_Phone_Calls_Info__c> resultCallsList = ZoomUsersPhoneBatchService.checkDuplicatePhoneCalls(callsIdZoomInfoMap);
+        List<Zoom_Phone_Calls_Info__c> resultCallsList = ZoomUsersPhoneService.checkDuplicatePhoneCalls(callsIdZoomInfoMap);
 
         insert resultCallsList;
     }

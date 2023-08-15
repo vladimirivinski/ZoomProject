@@ -1,4 +1,4 @@
-public with sharing class ZoomUsersPhoneBatchService {
+public with sharing class ZoomUsersPhoneService {
     public static HttpResponse zoomPhoneCallsCallout(String email){
         String address = 'callout:ZoomPhone/phone/users/' + email + '/call_logs';
  
