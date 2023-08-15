@@ -1,7 +1,7 @@
-public with sharing class ZoomUsersPhoneInfosBatchHelper {
+public with sharing class ZoomUsersPhoneBatchService {
     public static HttpResponse zoomPhoneCallsCallout(String email){
         String address = 'callout:ZoomPhone/phone/users/' + email + '/call_logs';
-
+ 
         // DateTime prev30Mins = DateTime.now().addMinutes(-30);
         DateTime lastHour = DateTime.now().addHours(-1);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');

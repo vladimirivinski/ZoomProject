@@ -1,4 +1,9 @@
-public with sharing class ZooomUserResponseWrapper {
+public with sharing class ZoomUsersPhoneEntity {
+
+    public static ZoomUsersPhoneEntity parse(String json){
+		return (ZoomUsersPhoneEntity) System.JSON.deserialize(json, ZoomUsersPhoneEntity.class);
+	}
+
 	public String next_page_token;	//
 	public Integer page_size;	//30
 	public Integer total_records;	//7
@@ -44,7 +49,5 @@ public with sharing class ZooomUserResponseWrapper {
 		public String extension_type;	//callQueue
 		public String extension_number;	//5170
 	}
-	public static ZooomUserResponseWrapper parse(String json){
-		return (ZooomUserResponseWrapper) System.JSON.deserialize(json, ZooomUserResponseWrapper.class);
-	}
+
 }
