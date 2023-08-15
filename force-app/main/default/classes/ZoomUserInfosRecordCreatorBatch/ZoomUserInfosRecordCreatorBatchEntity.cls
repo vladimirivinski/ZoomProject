@@ -1,17 +1,17 @@
 public with sharing class ZoomUserInfosRecordCreatorBatchEntity {
 
-    public static ZoomUsersResponseWrapper parse(String json){
+    public static UserResponseWrapper parse(String json){
         json.replace('"number":', '"phone":');
-		return (ZoomUsersResponseWrapper) System.JSON.deserialize(json, ZoomUsersResponseWrapper.class);
+		return (UserResponseWrapper) System.JSON.deserialize(json, UserResponseWrapper.class);
 	}
 
-    public class ZoomUsersResponseWrapper {
+    public class UserResponseWrapper {
         public String next_page_token { get; set; }
         public Integer page_size { get; set; }
         public Integer total_records { get; set; }
-        public List<ZoomUsersProfileWrapper> users { get; set; }
+        public List<UsersProfWrapper> users { get; set; }
     }
-    public class ZoomUsersProfileWrapper {
+    public class UsersProfWrapper {
         public String email { get; set; }
         public String extension_id { get; set; }
         public Integer extension_number { get; set; }

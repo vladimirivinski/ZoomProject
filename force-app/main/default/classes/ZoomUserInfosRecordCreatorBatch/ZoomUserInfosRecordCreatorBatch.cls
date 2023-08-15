@@ -1,21 +1,18 @@
-public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Batchable<sObject>, schedulable {
+public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable {
     public Database.QueryLocator start(Database.BatchableContext bc) {
         // NOTE: Retrieve Active users from org
         String query = 'SELECT Id, Name, Email, CallCenterId FROM User WHERE isActive = true AND CallCenterId != null';
         return Database.getQueryLocator(query);
     }
     public void execute(Database.BatchableContext bc, List<User> scope) {
-
-        Map<Id, CallCenter> mapCallCenterIdName = new Map<Id, CallCenter>([SELECT Id, Name FROM CallCenter]);
-        Map<String, ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> emailToZoomUsersProfileMap = ZoomUserInfosRecordCreatorBatchService.getMapUsersProfiles();
-
-
         List<Zoom_Users_Info__c> result = new List<Zoom_Users_Info__c>();
+        Map<Id, CallCenter> mapCallCenterIdName = new Map<Id, CallCenter>([SELECT Id, Name FROM CallCenter]);
+        Map<String, ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> emailToZoomUsersProfileMap = ZoomUserInfosRecordCreatorBatchService.getMapUsersProfiles();
+
         for (User u : scope) {
             Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
-
-
-
+            String emailKey = u.Email.substringBefore('.invalid').toLowerCase().trim();
+            ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper userInfo = emailToZoomUsersProfileMap.get(emailKey);
 
             zoomUser.User__c = u.id;
             zoomUser.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
@@ -35,10 +32,13 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
             zoomUser.Do_Not_Disturb__c        = 0;
             zoomUser.Call_Center_Member__c    = mapCallCenterIdName.get(u.CallCenterId).Name;
 
-            zoomUser.Zoom_User_Id__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).id;
-            zoomUser.Zoom_Department__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).department;
-            zoomUser.Extension_Id__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).extension_id;
-            zoomUser.Extension_Number__c = emailToZoomUsersProfileMap.get(u.Email.substringBefore('.invalid')).extension_number;
+            if (userInfo != null) {
+                zoomUser.Zoom_User_Id__c = userInfo.id;
+                zoomUser.Zoom_Department__c = userInfo.department;
+                zoomUser.Zoom_Email__c = userInfo.email;
+                zoomUser.Extension_Id__c = userInfo.extension_id;
+                zoomUser.Extension_Number__c = userInfo.extension_number;
+            }
             result.add(zoomUser);
         }
         insert result;

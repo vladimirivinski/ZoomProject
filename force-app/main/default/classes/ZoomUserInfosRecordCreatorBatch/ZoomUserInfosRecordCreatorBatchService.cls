@@ -1,10 +1,10 @@
 public with sharing class ZoomUserInfosRecordCreatorBatchService {
 
-    public static List<ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> fetchActivePhoneUsers() {
+    public static List<ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> fetchActivePhoneUsers() {
         String baseUrl = 'callout:ZoomPhone/phone/users';
-        Integer pageSize = 50;
+        Integer pageSize = 100;
         String status = 'activate';
-        List<ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> userWrappersList = new List<ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper>();
+        List<ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> userWrappersList = new List<ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper>();
 
         String nextPageToken = null;
         Integer totalRecords = 0;
@@ -24,7 +24,7 @@ public with sharing class ZoomUserInfosRecordCreatorBatchService {
 
             if (response.getStatusCode() == 200) {
                 String json = response.getBody();
-                ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersResponseWrapper wrapper = ZoomUserInfosRecordCreatorBatchEntity.parse(json);
+                ZoomUserInfosRecordCreatorBatchEntity.UserResponseWrapper wrapper = ZoomUserInfosRecordCreatorBatchEntity.parse(json);
                 userWrappersList.addAll(wrapper.users);
                 totalRecords = wrapper.total_records;
                 nextPageToken = wrapper.next_page_token;
@@ -32,18 +32,26 @@ public with sharing class ZoomUserInfosRecordCreatorBatchService {
                 System.debug('Callout failed with status code: ' + response.getStatusCode());
                 nextPageToken = null;
             }
-        } while (nextPageToken != null && userWrappersList.size() < totalRecords && Limits.getCallouts() < Limits.getLimitCallouts());
+        } while (nextPageToken != null && userWrappersList.size() < totalRecords);
         return userWrappersList;
     }
 
-    public static Map<String, ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> getMapUsersProfiles(){
-        List<ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> res = fetchActivePhoneUsers();
-        Map<String, ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper> emailToZoomUsersProfileMap = 
-            new Map<String, ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper>();
-        for(ZoomUserInfosRecordCreatorBatchEntity.ZoomUsersProfileWrapper user : res){
-            emailToZoomUsersProfileMap.put(user.email.toLowerCase(), user);
+    public static Map<String, ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> getMapUsersProfiles(){
+        List<ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> lst = fetchActivePhoneUsers();
+        Map<String, ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> emailToZoomUsersProfileMap =
+            new Map<String, ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper>();
+
+        if(lst != null && !lst.isEmpty()){
+            for(ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper obj : lst){
+                String email = obj.email.toLowerCase().trim();
+                emailToZoomUsersProfileMap.put(email, obj);
+            }
+            return emailToZoomUsersProfileMap;
         }
-        return emailToZoomUsersProfileMap;
-    }
+        return null;
+}
+
+
+
 
 }
