@@ -3,18 +3,28 @@ public with sharing class ZoomUsersPhoneInfosBatch implements Database.Batchable
         String query = 'SELECT Id, Name, Email__c, Zoom_User_Id__c FROM Zoom_Users_Info__c WHERE CreatedDate = TODAY';
         return Database.getQueryLocator(query);
     }
-    public void execute(Database.BatchableContext BC, List<Zoom_Users_Info__c> scope) {
-        Map<String, Zoom_Phone_Calls_Info__c> callsIdZoomInfoMap = new Map<String, Zoom_Phone_Calls_Info__c>();
-        // Map<String, ZoomCallCenterEntity.VoiceCall> callCenterIdsToLogsMap = ZoomCallCenterService.getCallCenterLogsMap();
 
+    public void execute(Database.BatchableContext BC, List<Zoom_Users_Info__c> scope) {
         List<Zoom_Phone_Calls_Info__c> resultCallsList = new List<Zoom_Phone_Calls_Info__c>();
 
         for (Zoom_Users_Info__c usr : scope) {
             List<Zoom_Phone_Calls_Info__c> userCallsList = ZoomUsersPhoneService.getPhoneCalls(usr.email__c, usr);
-            resultCallsList.addAll(userCallsList);
+            if (userCallsList != null && !userCallsList.isEmpty()){
+                resultCallsList.addAll(userCallsList);
+            }
         }
-        insert resultCallsList;
+
+        List<Zoom_Phone_Calls_Info__c> callCenterCallsList = ZoomCallCenterService.createCallCenterCalls(scope);
+        if (callCenterCallsList != null && !callCenterCallsList.isEmpty()) {
+            resultCallsList.addAll(callCenterCallsList);
+        }
+
+        System.debug('resultCallsList: ' + resultCallsList);
+        if (!resultCallsList.isEmpty()) {
+            insert resultCallsList;
+        }
     }
+
     public void finish(Database.BatchableContext BC) {
         System.debug(LoggingLevel.INFO, 'ZoomUsersPhoneInfosBatch finished');
     }

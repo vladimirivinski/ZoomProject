@@ -11,7 +11,7 @@ public with sharing class ZoomUsersPhoneService {
 
     public static HttpResponse zoomPhoneCallsCallout(String email){
         String address = 'callout:ZoomPhone/phone/users/' + email + '/call_logs';
-        DateTime lastHour = DateTime.now().addHours(-1);
+        DateTime lastHour = DateTime.now().addHours(-2);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String toStr = DateTime.now().formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String fromTime = '?from=' + fromStr;
@@ -30,7 +30,7 @@ public with sharing class ZoomUsersPhoneService {
     }
 
     public static List<Zoom_Phone_Calls_Info__c> createZoomPhoneCalls(String resBody, Zoom_Users_Info__c usr){
-
+        Id recordTypeId = Schema.SObjectType.Zoom_Phone_Calls_Info__c.getRecordTypeInfosByName().get('Phone Users').getRecordTypeId();
         Map<String, Zoom_Phone_Calls_Info__c> callsIdZoomInfoMap = new Map<String, Zoom_Phone_Calls_Info__c>();
 
         ZoomUsersPhoneEntity wrappedResponse = ZoomUsersPhoneEntity.parse(resBody);
@@ -40,6 +40,8 @@ public with sharing class ZoomUsersPhoneService {
                     info.Name                               = usr.name;
                     info.Zoom_Users_Info__c                 = usr.id;
                     info.Email__c                           = usr.email__c;
+                    info.RecordTypeId                       = recordTypeId;
+
                     info.Call_Date_Time__c                  = val.date_time;
                     info.Call_Id__c                         = val.call_id;
                     info.caller_name__c                     = val.caller_name;
@@ -52,11 +54,18 @@ public with sharing class ZoomUsersPhoneService {
                     info.Call_Result__c                     = val.result;
                     info.has_recording__c                   = val.recording_type != null ? true : false;
                     info.recording_Id__c                    = val.recording_id != null ? val.recording_id : null;
+                    info.Call_Direction__c                  = val.direction;
+                    info.Duration__c                        = val.duration;
+
+                    // Refactore this part
+                    // Calculate the duration of the calls in Zoom Users Info object
+                    // in formula fields
                     if (val.direction == 'inbound') {
                         info.Inbound_Call__c                = val.direction;
                         info.Inbound_Call_Duration__c       = val.duration;
                         info.Waiting_Time__c                = val.waiting_time;
-                        info.Hold_Time__c = val.hold_time;
+                        info.Hold_Time__c                   = val.hold_time;
+
                     } else if (val.direction == 'outbound') {
                         info.Outbound_Call__c               = val.direction;
                         info.Outbound_Call_Duration__c      = val.duration;
