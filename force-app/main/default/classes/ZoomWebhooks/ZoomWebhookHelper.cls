@@ -41,6 +41,12 @@ public without sharing class ZoomWebhookHelper {
 	}
 
 	public static void contactCenterUserStatusChanged(String ccEmail, String ccStatus, String ccSubStatus, String ccPrevStatus, String ccPrevSubStatus) {
+        System.debug('ccEmail!!!! ' + ccEmail);
+        System.debug('ccStatus!!!! ' + ccStatus);
+        System.debug('ccSubStatus!!!! ' + ccSubStatus);
+        System.debug('ccPrevStatus!!!! ' + ccPrevStatus);
+        System.debug('ccPrevSubStatus!!!! ' + ccPrevSubStatus);
+
 		List<Zoom_Users_Info__c> userList = getZoomUser(ccEmail);
         if (userList.size() > 0) {
 			userList[0].Contact_Center_Status__c     = ccStatus;
