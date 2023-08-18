@@ -8,8 +8,8 @@ public with sharing class ZoomCallCenterEntity {
 		public String next_page_token { get; set; }
 		public Integer page_size { get; set; }
 		public Integer total_records { get; set; }
-		public Datetime frm { get; set; }
-		public Datetime to { get; set; }
+		public DateTime frm { get; set; }
+		public DateTime to { get; set; }
 		public List<VoiceCall> voice_calls { get; set; }
 	}
 	public class VoiceCall {
@@ -22,8 +22,8 @@ public with sharing class ZoomCallCenterEntity {
 		public String caller_number_type { get; set; }
 		public String callee_number { get; set; }
 		public String callee_number_type { get; set; }
-		public Datetime start_time { get; set; }
-		public Datetime end_time { get; set; }
+		public DateTime start_time { get; set; }
+		public DateTime end_time { get; set; }
 		public Integer total_duration { get; set; }
 		public String consumer_number { get; set; }
 		public String consumer_display_name { get; set; }
