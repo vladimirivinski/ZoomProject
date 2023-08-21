@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Call_Center_Member__c</fullName>
+    <description>Call Center member</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Call Center member</inlineHelpText>
+    <label>Call Center Member</label>
+    <length>100</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

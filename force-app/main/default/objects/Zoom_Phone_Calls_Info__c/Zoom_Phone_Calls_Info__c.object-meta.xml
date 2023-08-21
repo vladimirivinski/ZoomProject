@@ -152,13 +152,15 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>Zoom Phone Calls Info</label>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <label>Zoom Calls</label>
     <nameField>
         <label>Zoom Phone Calls Info Name</label>
         <trackHistory>false</trackHistory>
         <type>Text</type>
     </nameField>
     <pluralLabel>Zoom Phone Calls Infos</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
     <searchLayouts></searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>

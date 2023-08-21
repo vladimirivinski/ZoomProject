@@ -12,6 +12,7 @@
     </summaryFilterItems>
     <summaryForeignKey>Zoom_Phone_Calls_Info__c.Zoom_Users_Info__c</summaryForeignKey>
     <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Summary</type>
 </CustomField>

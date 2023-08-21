@@ -20,6 +20,7 @@ TEXT(FLOOR( ( Available__c/60 )/60)) + &quot;h : 0&quot; + TEXT( FLOOR(MOD(( Ava
     <inlineHelpText>User available per day.</inlineHelpText>
     <label>Total Available</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>

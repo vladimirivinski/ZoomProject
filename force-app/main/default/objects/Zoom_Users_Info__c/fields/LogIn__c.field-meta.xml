@@ -3,9 +3,8 @@
     <fullName>LogIn__c</fullName>
     <externalId>false</externalId>
     <label>LogIn</label>
-    <summarizedField>Zoom_Event_Info__c.Log_In__c</summarizedField>
-    <summaryForeignKey>Zoom_Event_Info__c.Zoom_Users_Info__c</summaryForeignKey>
-    <summaryOperation>min</summaryOperation>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Summary</type>
+    <type>DateTime</type>
 </CustomField>

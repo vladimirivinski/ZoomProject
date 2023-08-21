@@ -3,11 +3,12 @@
     <fullName>AHT_Inbound__c</fullName>
     <description>Average hours phone calls per day.</description>
     <externalId>false</externalId>
-    <formula>TEXT(  MFLOOR( (Total_Inbound_Calls_Duration__c  /  Total_Inbound_Calls__c) / 60))+&quot; min(s)&quot;</formula>
+    <formula>TEXT(  MFLOOR( (Inbound_Calls_Duration__c  / Inbound_Calls__c) / 60))+&quot; min(s)&quot;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Average hours phone calls per day.</inlineHelpText>
     <label>AHT Inbound</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>

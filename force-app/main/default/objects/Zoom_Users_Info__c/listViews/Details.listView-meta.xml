@@ -6,7 +6,6 @@
     <columns>Presence_Status__c</columns>
     <columns>Total_Inbound_Calls__c</columns>
     <columns>Total_Outbound_Calls__c</columns>
-    <columns>LogIn__c</columns>
     <columns>LogOut__c</columns>
     <columns>LAST_UPDATE</columns>
     <filterScope>Mine</filterScope>

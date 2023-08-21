@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Center_Sub_Status__c</fullName>
+    <description>Contact Center user status when the user&apos;s current status is Not Ready.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contact Center user status when the user&apos;s current status is Not Ready.</inlineHelpText>
+    <label>Contact Center Sub Status</label>
+    <length>30</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -4,7 +4,6 @@
     <externalId>false</externalId>
     <label>Zoom Users Info</label>
     <referenceTo>Zoom_Users_Info__c</referenceTo>
-    <relationshipLabel>Zoom Phone Calls Infos</relationshipLabel>
     <relationshipName>Zoom_Phone_Calls_Infos</relationshipName>
     <relationshipOrder>0</relationshipOrder>
     <reparentableMasterDetail>false</reparentableMasterDetail>

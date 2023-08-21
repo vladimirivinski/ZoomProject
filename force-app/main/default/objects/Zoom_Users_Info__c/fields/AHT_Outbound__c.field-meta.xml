@@ -3,11 +3,12 @@
     <fullName>AHT_Outbound__c</fullName>
     <description>Average outbound calls duration per day.</description>
     <externalId>false</externalId>
-    <formula>TEXT(   MFLOOR(( Total_Outbound_Calls_Duration__c /  Total_Outbound_Calls__c )/60) )+ &quot; min(s)&quot;</formula>
+    <formula>TEXT(  MFLOOR( (Outbound_Calls_Duration__c  / Outbound_Calls__c) / 60))+&quot; min(s)&quot;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Average outbound calls duration per day.</inlineHelpText>
     <label>AHT Outbound</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>

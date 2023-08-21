@@ -20,6 +20,7 @@ TEXT(FLOOR( ( Do_Not_Disturb__c/60 )/60)) + &quot;h : 0&quot; + TEXT( FLOOR(MOD(
     <inlineHelpText>Total time Do Not Disturb per day.</inlineHelpText>
     <label>Total Do Not Disturb</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
