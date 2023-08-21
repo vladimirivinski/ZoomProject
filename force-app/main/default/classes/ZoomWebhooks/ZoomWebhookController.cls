@@ -1,11 +1,11 @@
 public without sharing class ZoomWebhookController {
-	static final String PRESENCE_STATUS = 'user.presence_status_updated';
-	static final String USER_SIGNED_IN = 'user.signed_in';
-	static final String USER_SIGNED_OUT = 'user.signed_out';
+	static final String PRESENCE_STATUS 					= 'user.presence_status_updated';
+	static final String USER_SIGNED_IN 						= 'user.signed_in';
+	static final String USER_SIGNED_OUT 					= 'user.signed_out';
 
-	static final String CONTACT_CENTER_USER_LOGIN = 'contact_center.user_login';
-	static final String CONTACT_CENTER_USER_LOGOUT = 'contact_center.user_logout';
-	static final String CONTACT_CENTER_USER_STATUS_CHANGED = 'contact_center.user_status_changed';
+	static final String CONTACT_CENTER_USER_LOGIN 			= 'contact_center.user_login';
+	static final String CONTACT_CENTER_USER_LOGOUT 			= 'contact_center.user_logout';
+	static final String CONTACT_CENTER_USER_STATUS_CHANGED 	= 'contact_center.user_status_changed';
 
 
 	public static void checkZoomEvent(Map<String, Object> resp) {
@@ -34,7 +34,7 @@ public without sharing class ZoomWebhookController {
 		} else if (event == CONTACT_CENTER_USER_LOGOUT) {
 			ZoomWebhookHelper.contactCenterUserLogout(ccEmail, lastChanged);
 		} else if (event == CONTACT_CENTER_USER_STATUS_CHANGED) {
-			ZoomWebhookHelper.contactCenterUserStatusChanged(ccEmail, ccStatus, ccSubStatus, ccPrevStatus, ccPrevSubStatus);
+			ZoomWebhookHelper.contactCenterUserStatusChanged(ccEmail, ccStatus, ccSubStatus, ccPrevStatus, ccPrevSubStatus, lastChanged);
 		} else {
 			System.debug('Event not found');
 		}

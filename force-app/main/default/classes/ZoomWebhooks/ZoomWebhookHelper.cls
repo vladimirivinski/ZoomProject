@@ -11,6 +11,7 @@ public without sharing class ZoomWebhookHelper {
 	public static void userLogIn(String email) {
 		List<Zoom_Users_Info__c> userList = getZoomUser(email);
 		if (userList.size() > 0) {
+			// userList[0].LogIn__c = lastChanged; // TODO
 			userList[0].Presence_Status__c = 'Available';
 		}
 		update userList;
@@ -40,7 +41,7 @@ public without sharing class ZoomWebhookHelper {
         update userList;
 	}
 
-	public static void contactCenterUserStatusChanged(String ccEmail, String ccStatus, String ccSubStatus, String ccPrevStatus, String ccPrevSubStatus) {
+	public static void contactCenterUserStatusChanged(String ccEmail, String ccStatus, String ccSubStatus, String ccPrevStatus, String ccPrevSubStatus, DateTime lastChanged) {
         System.debug('ccEmail!!!! ' + ccEmail);
         System.debug('ccStatus!!!! ' + ccStatus);
         System.debug('ccSubStatus!!!! ' + ccSubStatus);
@@ -53,6 +54,7 @@ public without sharing class ZoomWebhookHelper {
 			userList[0].Contact_Center_Sub_Status__c = ccStatus == 'Not Ready' ? ccSubStatus : null;
 			userList[0].CC_Prev_Status__c            = ccPrevStatus;
 			userList[0].CC_Prev_Sub_Status__c        = ccPrevSubStatus;
+			userList[0].CC_Status_Updated__c         = lastChanged;
 		}
         update userList;
 	}

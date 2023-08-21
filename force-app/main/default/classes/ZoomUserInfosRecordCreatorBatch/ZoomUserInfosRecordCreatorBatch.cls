@@ -23,21 +23,29 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
             zoomUser.User__c = u.id;
             zoomUser.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
             // zoomUser.Email__c = u.Email;
-            zoomUser.Name                     = u.Name;
-            zoomUser.OwnerId                  = u.id;
-            zoomUser.Presence_Status__c       = 'Initial';
-            zoomUser.Status_Updated__c        = Datetime.Now();
-            zoomUser.Tracking_Date__c         = Date.today();
-            zoomUser.Available__c             = 0;
-            zoomUser.Away__c                  = 0;
-            zoomUser.In_Calendar_Event__c     = 0;
-            zoomUser.In_Meeting__c            = 0;
-            zoomUser.Offline__c               = 0;
-            zoomUser.On_Phone_Call__c         = 0;
-            zoomUser.Presenting__c            = 0;
-            zoomUser.Do_Not_Disturb__c        = 0;
-            zoomUser.Call_Center_Member__c    = callCenterName;
-            zoomUser.RecordTypeId             = callCenterName == 'Zoom Phone Call Center' ? recordTypePhoneId : recordTypeCallCenterId; // TODO: Refactor this to separet method
+            zoomUser.Name                       = u.Name;
+            zoomUser.OwnerId                    = u.id;
+            zoomUser.Tracking_Date__c           = Date.today();
+            zoomUser.Presence_Status__c         = 'Initial';
+            zoomUser.Status_Updated__c          = DateTime.Now();
+            zoomUser.Available__c               = 0;
+            zoomUser.Away__c                    = 0;
+            zoomUser.In_Calendar_Event__c       = 0;
+            zoomUser.In_Meeting__c              = 0;
+            zoomUser.Offline__c                 = 0;
+            zoomUser.On_Phone_Call__c           = 0;
+            zoomUser.Presenting__c              = 0;
+            zoomUser.Do_Not_Disturb__c          = 0;
+            zoomUser.Custom_Status__c           = 0;
+            zoomUser.Contact_Center_Status__c   = 'Initial';
+            zoomUser.CC_Status_Updated__c       = DateTime.Now();
+            zoomUser.Ready__c                   = 0;
+            zoomUser.Not_Ready__c               = 0;
+            zoomUser.Occupied__c                = 0;
+            zoomUser.Offline_Status__c          = 0;
+            zoomUser.Custom_CC_Status__c        = 0;
+            zoomUser.Call_Center_Member__c      = callCenterName;
+            zoomUser.RecordTypeId               = callCenterName == 'Zoom Phone Call Center' ? recordTypePhoneId : recordTypeCallCenterId; // TODO: Refactor this to separet method
 
             if (userInfo != null) {
                 zoomUser.Zoom_User_Id__c = userInfo.id;

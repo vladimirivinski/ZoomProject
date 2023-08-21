@@ -2,7 +2,7 @@ public with sharing class ZoomCallCenterService {
     public static List<ZoomCallCenterEntity.VoiceCall> fetchVoiceCallLogs() {
         String baseUrl = 'callout:ZoomPhone/contact_center/voice_calls';
         Integer pageSize = 50;
-        DateTime lastHour = DateTime.now().addHours(-2);
+        DateTime lastHour = DateTime.now().addHours(-6);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String toStr = DateTime.now().formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String fromTime = '&from=' + fromStr;
@@ -59,10 +59,9 @@ public with sharing class ZoomCallCenterService {
     }
 
     public static List<Zoom_Phone_Calls_Info__c> createCallCenterCalls(List<Zoom_Users_Info__c> usrLst) {
-        Id recordTypeId = Schema.SObjectType.Zoom_Phone_Calls_Info__c.getRecordTypeInfosByName().get('Call Center').getRecordTypeId();
-
+        String recordTypeName = 'Contact Center';
+        Id recordTypeId = Schema.SObjectType.Zoom_Phone_Calls_Info__c.getRecordTypeInfosByName().get(recordTypeName).getRecordTypeId();
         Map<String, List<ZoomCallCenterEntity.VoiceCall>> callCenterIdsToLogsMap = getCallCenterIdsToLogsMap();
-
         Map<String, Zoom_Phone_Calls_Info__c> callsIdZoomInfoMap = new Map<String, Zoom_Phone_Calls_Info__c>();
 
         for (Zoom_Users_Info__c u : usrLst) {
@@ -70,24 +69,25 @@ public with sharing class ZoomCallCenterService {
 
             if (callLogs != null && !callLogs.isEmpty()) {
                 for (ZoomCallCenterEntity.VoiceCall callLog : callLogs) {
-                    Zoom_Phone_Calls_Info__c info = new Zoom_Phone_Calls_Info__c();
-                    info.Name                       = u.Name;
-                    info.Zoom_Users_Info__c         = u.Id;
-                    info.Email__c                   = u.Email__c;
-                    info.RecordTypeId               = recordTypeId;
+                    Zoom_Phone_Calls_Info__c call = new Zoom_Phone_Calls_Info__c();
+                    call.Name                       = u.Name;
+                    call.Zoom_Users_Info__c         = u.Id;
+                    call.Email__c                   = u.Email__c;
+                    call.RecordTypeId               = recordTypeId;
+                    call.Call_Type__c               = recordTypeName;
 
-                    info.Call_Date_Time__c          = callLog.start_time;
-                    info.Caller_Number_Source__c    = callLog.caller_number;
-                    info.Callee_Number_Source__c    = callLog.callee_number;
-                    info.Callee_Name__c             = callLog.consumer_display_name;
-                    info.Has_Recording__c           = callLog.recorded;
-                    info.Callee_Location__c         = callLog.country_name;
-                    info.Call_Result__c             = callLog.result;
-                    info.Call_Direction__c          = callLog.direction;
-                    info.Duration__c                = callLog.total_duration;
-                    info.Call_Id__c                 = callLog.engagement_id;
+                    call.Call_Date_Time__c          = callLog.start_time;
+                    call.Caller_Number_Source__c    = callLog.caller_number;
+                    call.Callee_Number_Source__c    = callLog.callee_number;
+                    call.Callee_Name__c             = callLog.consumer_display_name;
+                    call.Has_Recording__c           = callLog.recorded;
+                    call.Callee_Location__c         = callLog.country_name;
+                    call.Call_Result__c             = callLog.result;
+                    call.Call_Direction__c          = callLog.direction;
+                    call.Duration__c                = callLog.total_duration;
+                    call.Call_Id__c                 = callLog.engagement_id;
 
-                    callsIdZoomInfoMap.put(info.Call_Id__c, info);
+                    callsIdZoomInfoMap.put(call.Call_Id__c, call);
                 }
             }
         }

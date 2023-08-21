@@ -11,7 +11,7 @@ public with sharing class ZoomUsersPhoneService {
 
     public static HttpResponse zoomPhoneCallsCallout(String email){
         String address = 'callout:ZoomPhone/phone/users/' + email + '/call_logs';
-        DateTime lastHour = DateTime.now().addHours(-2);
+        DateTime lastHour = DateTime.now().addHours(-6);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String toStr = DateTime.now().formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String fromTime = '?from=' + fromStr;
@@ -25,52 +25,51 @@ public with sharing class ZoomUsersPhoneService {
         req.setHeader('Content-type', 'application/json');
         req.setEndpoint(url);
         Http http = new Http();
-        HttpResponse resopnse = http.send(req);
-        return resopnse;
+        HttpResponse response = http.send(req);
+        return response;
     }
 
     public static List<Zoom_Phone_Calls_Info__c> createZoomPhoneCalls(String resBody, Zoom_Users_Info__c usr){
-        Id recordTypeId = Schema.SObjectType.Zoom_Phone_Calls_Info__c.getRecordTypeInfosByName().get('Phone Users').getRecordTypeId();
+        String recordTypeName = 'Phone Users';
+        Id recordTypeId = Schema.SObjectType.Zoom_Phone_Calls_Info__c.getRecordTypeInfosByName().get(recordTypeName).getRecordTypeId();
         Map<String, Zoom_Phone_Calls_Info__c> callsIdZoomInfoMap = new Map<String, Zoom_Phone_Calls_Info__c>();
 
         ZoomUsersPhoneEntity wrappedResponse = ZoomUsersPhoneEntity.parse(resBody);
             if (wrappedResponse.total_records != null && wrappedResponse.total_records != 0) {
                 for (ZoomUsersPhoneEntity.cls_call_logs val : wrappedResponse.call_logs) {
-                    Zoom_Phone_Calls_Info__c info = new Zoom_Phone_Calls_Info__c();
-                    info.Name                               = usr.name;
-                    info.Zoom_Users_Info__c                 = usr.id;
-                    info.Email__c                           = usr.email__c;
-                    info.RecordTypeId                       = recordTypeId;
+                    Zoom_Phone_Calls_Info__c call = new Zoom_Phone_Calls_Info__c();
+                    call.Name                               = usr.name;
+                    call.Zoom_Users_Info__c                 = usr.id;
+                    call.Email__c                           = usr.email__c;
+                    call.RecordTypeId                       = recordTypeId;
+                    call.Call_Type__c                       = recordTypeName;
 
-                    info.Call_Date_Time__c                  = val.date_time;
-                    info.Call_Id__c                         = val.call_id;
-                    info.caller_name__c                     = val.caller_name;
-                    info.caller_number__c                   = val.caller_number;
-                    info.Caller_Number_Source__c            = val.calleer_number_source;
-                    info.Callee_Number_Source__c            = val.callee_number_source;
-                    info.Callee_Name__c                     = val.callee_number_source;
-                    info.Callee_Number__c                   = val.callee_number;
-                    info.Callee_Location__c                 = val.callee_location;
-                    info.Call_Result__c                     = val.result;
-                    info.has_recording__c                   = val.recording_type != null ? true : false;
-                    info.recording_Id__c                    = val.recording_id != null ? val.recording_id : null;
-                    info.Call_Direction__c                  = val.direction;
-                    info.Duration__c                        = val.duration;
+                    call.Call_Date_Time__c                  = val.date_time;
+                    call.Call_Id__c                         = val.call_id;
+                    call.caller_name__c                     = val.caller_name;
+                    call.caller_number__c                   = val.caller_number;
+                    call.Caller_Number_Source__c            = val.calleer_number_source;
+                    call.Callee_Number_Source__c            = val.callee_number_source;
+                    call.Callee_Name__c                     = val.callee_number_source;
+                    call.Callee_Number__c                   = val.callee_number;
+                    call.Callee_Location__c                 = val.callee_location;
+                    call.Call_Result__c                     = val.result;
+                    call.has_recording__c                   = val.recording_type != null ? true : false;
+                    call.recording_Id__c                    = val.recording_id != null ? val.recording_id : null;
+                    // call.Call_Direction__c                  = val.direction;
+                    // call.Duration__c                        = val.duration;
 
-                    // Refactore this part
-                    // Calculate the duration of the calls in Zoom Users Info object
-                    // in formula fields
                     if (val.direction == 'inbound') {
-                        info.Inbound_Call__c                = val.direction;
-                        info.Inbound_Call_Duration__c       = val.duration;
-                        info.Waiting_Time__c                = val.waiting_time;
-                        info.Hold_Time__c                   = val.hold_time;
+                        call.Inbound_Call__c                = val.direction;
+                        call.Inbound_Call_Duration__c       = val.duration;
+                        call.Waiting_Time__c                = val.waiting_time;
+                        call.Hold_Time__c                   = val.hold_time;
 
                     } else if (val.direction == 'outbound') {
-                        info.Outbound_Call__c               = val.direction;
-                        info.Outbound_Call_Duration__c      = val.duration;
+                        call.Outbound_Call__c               = val.direction;
+                        call.Outbound_Call_Duration__c      = val.duration;
                     }
-                    callsIdZoomInfoMap.put(info.Call_Id__c, info);
+                    callsIdZoomInfoMap.put(call.Call_Id__c, call);
                 }
             }
             List<Zoom_Phone_Calls_Info__c> resultCallsList = checkDuplicatePhoneCalls(callsIdZoomInfoMap);
