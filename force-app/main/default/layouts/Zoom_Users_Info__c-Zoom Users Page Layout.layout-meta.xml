@@ -19,10 +19,6 @@
                 <behavior>Readonly</behavior>
                 <field>User__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>LogIn__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -120,7 +116,12 @@
         <detailHeading>true</detailHeading>
         <editHeading>false</editHeading>
         <label>User Log In/Out</label>
-        <layoutColumns/>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>LogIn__c</field>
+            </layoutItems>
+        </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
