@@ -25,22 +25,23 @@ public without sharing class ZoomWebhookController {
 
 		if (event == PRESENCE_STATUS) {
 			ZoomWebhookHelper.presenceStatusUpdated(email, status, lastChanged);
-		} else if (event == USER_SIGNED_IN || event == USER_SIGNED_OUT) {
-			ZoomWebhookHelper.userLogIn(email);
-		} else if (event == USER_SIGNED_OUT) {
+		}
+		 if (event == USER_SIGNED_IN || event == USER_SIGNED_OUT) {
+			ZoomWebhookHelper.userLogIn(email, lastChanged);
+		}
+		 if (event == USER_SIGNED_OUT) {
 			ZoomWebhookHelper.userLogOut(email, lastChanged);
-		} else if (event == CONTACT_CENTER_USER_LOGIN) {
+		}
+		 if (event == CONTACT_CENTER_USER_LOGIN) {
 			ZoomWebhookHelper.contactCenterUserLogin(ccEmail, lastChanged);
-		} else if (event == CONTACT_CENTER_USER_LOGOUT) {
+		}
+		 if (event == CONTACT_CENTER_USER_LOGOUT) {
 			ZoomWebhookHelper.contactCenterUserLogout(ccEmail, lastChanged);
-		} else if (event == CONTACT_CENTER_USER_STATUS_CHANGED) {
+		}
+		 if (event == CONTACT_CENTER_USER_STATUS_CHANGED) {
 			ZoomWebhookHelper.contactCenterUserStatusChanged(ccEmail, ccStatus, ccSubStatus, ccPrevStatus, ccPrevSubStatus, lastChanged);
-		} else {
-			System.debug('Event not found');
 		}
 	}
-
-
 }
 
 // {

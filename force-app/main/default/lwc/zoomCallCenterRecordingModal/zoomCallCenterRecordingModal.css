@@ -1,0 +1,12 @@
+.ts-font{
+    font-size: 12px;
+    font-weight:lighter;
+}
+
+.log_devider{
+    dislpay: block;
+    margin-bottom: 2%;
+    margin-top: 1%;
+    border-bottom: 1px solid #ccc;
+    clear: both;
+}

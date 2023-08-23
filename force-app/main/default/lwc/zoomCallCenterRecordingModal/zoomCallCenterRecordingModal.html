@@ -1,0 +1,20 @@
+<template>
+    <lightning-modal-header label="Call Center Recording">
+        <h2>Phone call date: {callDate}</h2>
+        <h2>Caller Name: {callerName}</h2>
+    </lightning-modal-header>
+        <lightning-modal-body>
+            <template for:each={transformedTranscript} for:item="line">
+                <div  key={line.timeline}>
+                    <Strong> {line.speaker}</Strong>
+                    <p>{line.content}</p>
+                    <p class="ts-font">{line.timeline}</p>
+                </div>
+            </template>
+        </lightning-modal-body>
+    <lightning-modal-footer>
+        <template if:true={downloadCVS}>
+            <lightning-button variant="success" label="Download CSV" onclick={handleCSVDownload} disabled={downloadCSVDisable}></lightning-button>
+        </template>
+    </lightning-modal-footer>
+</template>

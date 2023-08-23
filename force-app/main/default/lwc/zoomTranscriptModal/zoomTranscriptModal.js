@@ -27,11 +27,14 @@ export default class ZoomTranscriptModal extends LightningElement {
     }
     @wire(getCallTranscription, { recordingId: "$recordingId" })
     wiredTranscription({ error, data }) {
+        console.log('data:', data);
         if (data?.timeline) {
             this._isLoading = true;
             this.queriedData = data?.timeline;
             this.parseCallLogData();
+            console.log('====================this.queriedData:', this.queriedData);
         } else {
+            console.log('====================error:', error);
             this.error = error;
         }
     }
