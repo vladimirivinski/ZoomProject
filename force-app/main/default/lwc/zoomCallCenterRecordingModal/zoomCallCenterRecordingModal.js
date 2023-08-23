@@ -14,7 +14,7 @@ export default class ZoomCallCenterRecordingModal extends LightningElement {
     transformedTranscript;
     downloadCSVDisable = false;
     downloadCVS = false;
-
+    isRecordingData = true;
 
     @wire(getRecord, { recordId: "$recordId", fields })
     wiredPhoneCallInfo({ error, data }) {
@@ -27,11 +27,14 @@ export default class ZoomCallCenterRecordingModal extends LightningElement {
 
     @wire(getEngagementRecording, { callId: "$callId", recordId: "$recordId" })
     wiredTranscription({ error, data }) {
+        console.log('data',data)
         if (data) {
             this.queriedData = data;
-             this.transformTranscript(data);
+            this.transformTranscript(data);
+            this.isRecordingData = true;
+
         } else {
-            console.log('ZoomCallCenterRecordingModal ERROR:', error);
+            console.error('ZoomCallCenterRecordingModal ERROR:', error);
             this.error = error;
         }
     }
@@ -47,6 +50,9 @@ export default class ZoomCallCenterRecordingModal extends LightningElement {
     }
     get callDate() {
         return this.queriedFields?.Call_Date_Time__c?.displayValue;
+    }
+    get isRecordingData(){
+         return this.queriedData?.message === 'The recording transcript does not exist.' ? false : true;
     }
 
     transformTranscript(text) {

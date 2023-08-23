@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Center_List</fullName>
+    <columns>Tracking_Date__c</columns>
+    <columns>NAME</columns>
+    <columns>Inbound_Calls__c</columns>
+    <columns>AHT_Inbound__c</columns>
+    <columns>Outbound_Calls__c</columns>
+    <columns>AHT_Outbound__c</columns>
+    <columns>Contact_Center_Status__c</columns>
+    <columns>Contact_Center_Sub_Status__c</columns>
+    <columns>User_Log_In__c</columns>
+    <columns>User_Log_Out__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Call_Center_Member__c</field>
+        <operation>equals</operation>
+        <value>Zoom Contact Center</value>
+    </filters>
+    <filters>
+        <field>Tracking_Date__c</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>Contact Center List</label>
+</ListView>
