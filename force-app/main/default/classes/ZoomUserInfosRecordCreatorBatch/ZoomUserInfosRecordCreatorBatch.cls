@@ -12,7 +12,7 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
         // TODO: Refactor this to separet method
         Id recordTypePhoneId = Schema.SObjectType.Zoom_Users_Info__c.getRecordTypeInfosByName().get('Zoom Phone').getRecordTypeId();
         Id recordTypeCallCenterId = Schema.SObjectType.Zoom_Users_Info__c.getRecordTypeInfosByName().get('Contact Center').getRecordTypeId();
-        
+
 
         for (User u : scope) {
             Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
