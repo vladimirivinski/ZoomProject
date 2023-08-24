@@ -41,7 +41,7 @@ public with sharing class ZoomUsersPermissionCheckerBatch implements Database.Ba
 
     public void finish(Database.BatchableContext bc) {
         // NOTE: Execute next batch
-        Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
+        if(!Test.isRunningTest())Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
     }
 
     //NOTE: Schedule interface
@@ -56,7 +56,6 @@ public with sharing class ZoomUsersPermissionCheckerBatch implements Database.Ba
             system.schedule(jobName, cron, new ZoomUsersPermissionCheckerBatch());
         }
     }
-
     public void execute(SchedulableContext SC) {
         database.executeBatch(new ZoomUsersPermissionCheckerBatch(), 50);
     }
