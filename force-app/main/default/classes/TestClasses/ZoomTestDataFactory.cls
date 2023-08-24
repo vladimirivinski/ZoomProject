@@ -48,23 +48,32 @@ public with sharing class ZoomTestDataFactory {
         createListUsers(count, prof, email);
         List<User> usrLst = [SELECT Id, Name, Email FROM User WHERE Email LIKE :'%testuser%'];
         List<Zoom_Users_Info__c> zoomUsersInfo = new List<Zoom_Users_Info__c>();
-        List<String> statuses = new List<String>{ 'Available', 'Away', 'In_Calendar_Event', 'In_Meeting', 'Offline', 'On_Phone_Call', 'Presenting', 'Do_Not_Disturb' };
+        List<String> statuses = new List<String>{ 'Available', 'Away', 'In_Calendar_Event', 'In_Meeting', 'Offline', 'On_Phone_Call', 'Presenting', 'Do_Not_Disturb'};
+        List<String> ccStatuses = new List<String>{ 'Ready', 'Not Ready', 'Occupied', 'Offline', 'Not Ready', 'Offline', 'Ready', 'Occupied' };
         for (Integer i = 0; i < count; i++) {
             Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
-            zoomUser.User__c = usrLst[i].Id;
-            zoomUser.Email__c = usrLst[i].Email;
-            zoomUser.Name = usrLst[i].Name;
-            zoomUser.Presence_Status__c = statuses[i];
-            zoomUser.Status_Updated__c = DateTime.now();
-            zoomUser.Tracking_Date__c = Date.today();
-            zoomUser.Available__c = 0;
-            zoomUser.Away__c = 0;
-            zoomUser.In_Calendar_Event__c = 0;
-            zoomUser.In_Meeting__c = 0;
-            zoomUser.Offline__c = 0;
-            zoomUser.On_Phone_Call__c = 0;
-            zoomUser.Presenting__c = 0;
-            zoomUser.Do_Not_Disturb__c = 0;
+            zoomUser.User__c                    = usrLst[i].Id;
+            zoomUser.Email__c                   = usrLst[i].Email;
+            zoomUser.Name                       = usrLst[i].Name;
+            zoomUser.Presence_Status__c         = statuses[i];
+            zoomUser.Status_Updated__c          = DateTime.now();
+            zoomUser.Tracking_Date__c           = Date.today();
+            zoomUser.Available__c               = 0;
+            zoomUser.Away__c                    = 0;
+            zoomUser.In_Calendar_Event__c       = 0;
+            zoomUser.In_Meeting__c              = 0;
+            zoomUser.Offline__c                 = 0;
+            zoomUser.On_Phone_Call__c           = 0;
+            zoomUser.Presenting__c              = 0;
+            zoomUser.Do_Not_Disturb__c          = 0;
+
+            zoomUser.Contact_Center_Status__c   = ccStatuses[i];
+            zoomUser.CC_Prev_Status__c          = i==0 ? ccStatuses[1] : ccStatuses[i-1];
+            zoomUser.CC_Status_Updated__c       = DateTime.Now();
+            zoomUser.Ready__c                   = 0;
+            zoomUser.Not_Ready__c               = 0;
+            zoomUser.Occupied__c                = 0;
+            zoomUser.Offline_Status__c          = 0;
             zoomUsersInfo.add(zoomUser);
         }
         insert zoomUsersInfo;

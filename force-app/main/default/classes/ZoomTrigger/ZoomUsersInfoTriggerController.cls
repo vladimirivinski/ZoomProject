@@ -15,7 +15,6 @@ public without sharing class ZoomUsersInfoTriggerController {
 		DateTime ccStatusModifiedNew 	= newUsr[0].CC_Status_Updated__c;
 		DateTime ccStatusModifiedOld 	= oldUsr[0].CC_Status_Updated__c;
 		Integer ccDurationSeconds 	= Integer.valueOf((ccStatusModifiedNew.getTime() - ccStatusModifiedOld.getTime()) / (1000));
-		// String contCenterStatusOld 	= oldUsr[0].Contact_Center_Status__c;
 		String contCenterCurrentStatus 	= newUsr[0].Contact_Center_Status__c;
 		String contCenterPreviousStatus = newUsr[0].CC_Prev_Status__c;
 
@@ -55,9 +54,6 @@ public without sharing class ZoomUsersInfoTriggerController {
 			when 'Do_Not_Disturb' {
 				usr.Do_Not_Disturb__c += durationSeconds;
 			}
-			// when else {
-			// 	usr.Custom_Status__c += durationSeconds;
-			// }
 		}
 	}
 
@@ -75,9 +71,6 @@ public without sharing class ZoomUsersInfoTriggerController {
 			when 'Offline' {
 				usr.Offline_Status__c += ccDurationSeconds;
 			}
-			// when else {
-			// 	usr.Custom_CC_Status__c += ccDurationSeconds;
-			// }
 		}
 	}
 }
