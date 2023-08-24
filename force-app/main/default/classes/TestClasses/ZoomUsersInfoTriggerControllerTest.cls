@@ -12,7 +12,7 @@ private class ZoomUsersInfoTriggerControllerTest {
             lstUsr[i].Status_Updated__c = DateTime.now().addHours(1);
             update lstUsr[i];
         }
-        Test.stopTest();   
-        System.assertEquals(8, lstUsr.size(), '8 Zoom Users Info records should be created');     
+        Test.stopTest();
+        System.assertEquals(8, lstUsr.size(), '8 Zoom Users Info records should be created');
     }
 }
