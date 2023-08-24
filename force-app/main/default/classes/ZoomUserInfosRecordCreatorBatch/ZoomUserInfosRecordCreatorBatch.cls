@@ -9,7 +9,7 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
         Map<Id, CallCenter> mapCallCenterIdName = new Map<Id, CallCenter>([SELECT Id, Name FROM CallCenter]);
         Map<String, ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> emailToZoomUsersProfileMap = ZoomUserInfosRecordCreatorBatchService.getMapUsersProfiles();
 
-        // TODO: Refactor this to separet method
+        // TODO: Refactor this to separate method
         Id recordTypePhoneId = Schema.SObjectType.Zoom_Users_Info__c.getRecordTypeInfosByName().get('Zoom Phone').getRecordTypeId();
         Id recordTypeCallCenterId = Schema.SObjectType.Zoom_Users_Info__c.getRecordTypeInfosByName().get('Contact Center').getRecordTypeId();
 
