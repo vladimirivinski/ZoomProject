@@ -2,7 +2,6 @@
 public with sharing class ZoomCallTranscriptionHttpCalloutMock implements HttpCalloutMock {
     public HTTPResponse respond(HTTPRequest request) {
         String recordingId = '123456';
-
         HttpResponse response = new HttpResponse();
         response.setHeader('Content-Type', 'application/json');
         response.setHeader('location', 'https://api.zoom.us/v2/recordings/' + recordingId + '/transcript');

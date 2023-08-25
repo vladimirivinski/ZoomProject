@@ -79,4 +79,14 @@ public with sharing class ZoomTestDataFactory {
         insert zoomUsersInfo;
         return zoomUsersInfo;
     }
+
+    public static Zoom_Phone_Calls_Info__c createZoomCall(){
+        List<Zoom_Users_Info__c> zoomUser = createListZoomUsersInfo(1, 'System Administrator', 'testuser@some.com');
+        Zoom_Phone_Calls_Info__c zoomCall = new Zoom_Phone_Calls_Info__c();
+        zoomCall.Zoom_Users_Info__c = zoomUser[0].Id;
+        zoomCall.Name = 'Test Call';
+        zoomCall.Call_Id__c = '123456789';
+        insert zoomCall;
+        return zoomCall;
+    }
 }
