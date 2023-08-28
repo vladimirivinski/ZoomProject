@@ -7,17 +7,16 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
     public void execute(Database.BatchableContext bc, List<User> scope) {
         List<Zoom_Users_Info__c> result = new List<Zoom_Users_Info__c>();
         Map<Id, CallCenter> mapCallCenterIdName = new Map<Id, CallCenter>([SELECT Id, Name FROM CallCenter]);
-        Map<String, ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper> emailToZoomUsersProfileMap = ZoomUserInfosRecordCreatorBatchService.getMapUsersProfiles();
+        Map<String, ZoomUserInfosRecordCreatorBatchService.UsersProfWrapper> emailToZoomUsersProfileMap = ZoomUserInfosRecordCreatorBatchService.getMapUsersProfiles();
 
         // TODO: Refactor this to separate method
         Id recordTypePhoneId = Schema.SObjectType.Zoom_Users_Info__c.getRecordTypeInfosByName().get('Zoom Phone').getRecordTypeId();
         Id recordTypeCallCenterId = Schema.SObjectType.Zoom_Users_Info__c.getRecordTypeInfosByName().get('Contact Center').getRecordTypeId();
 
-
         for (User u : scope) {
             Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
             String emailKey = u.Email.substringBefore('.invalid').toLowerCase().trim();
-            ZoomUserInfosRecordCreatorBatchEntity.UsersProfWrapper userInfo = emailToZoomUsersProfileMap.get(emailKey);
+            ZoomUserInfosRecordCreatorBatchService.UsersProfWrapper userInfo = emailToZoomUsersProfileMap.get(emailKey);
             String callCenterName = mapCallCenterIdName.get(u.CallCenterId).Name;
 
             zoomUser.User__c = u.id;
@@ -49,6 +48,7 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
 
             if (userInfo != null) {
                 zoomUser.Zoom_User_Id__c = userInfo.id;
+                zoomUser.Zoom_Name__c = userInfo.name;
                 zoomUser.Zoom_Department__c = userInfo.department;
                 zoomUser.Zoom_Email__c = userInfo.email;
                 zoomUser.Extension_Id__c = userInfo.extension_id;
@@ -67,8 +67,8 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
         if (hour == 7)
             Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
         else {
-            jobName = jobName += ' - ' + datetime.now().format();
-            String cron = '0 0 ' + String.valueof(hour) + ' ? * MON-FRI'; // NOTE: Execute From Monday - Friday
+            jobName = jobName += ' - ' + DateTime.now().format();
+            String cron = '0 0 ' + String.valueOf(hour) + ' ? * MON-FRI'; // NOTE: Execute From Monday - Friday
             system.schedule(jobName, cron, new ZoomUserInfosRecordCreatorBatch());
         }
     }

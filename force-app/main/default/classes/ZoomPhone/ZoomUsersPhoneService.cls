@@ -76,7 +76,6 @@ public with sharing class ZoomUsersPhoneService {
             return resultCallsList;
     }
 
-
     public static List<Zoom_Phone_Calls_Info__c> checkDuplicatePhoneCalls(Map<String, Zoom_Phone_Calls_Info__c> callMap){
         Map<String, Zoom_Phone_Calls_Info__c> orgCallsMap = new Map<String, Zoom_Phone_Calls_Info__c>();
         for (Zoom_Phone_Calls_Info__c calls : [SELECT z.Call_Id__c,

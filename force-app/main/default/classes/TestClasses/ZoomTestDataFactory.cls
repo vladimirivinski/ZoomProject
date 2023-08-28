@@ -55,6 +55,7 @@ public with sharing class ZoomTestDataFactory {
             zoomUser.User__c                    = usrLst[i].Id;
             zoomUser.Email__c                   = usrLst[i].Email;
             zoomUser.Name                       = usrLst[i].Name;
+            zoomUser.Zoom_User_Id__c            = 'ukAAkZKfROKMSw1bj_RDFQ';
             zoomUser.Presence_Status__c         = statuses[i];
             zoomUser.Status_Updated__c          = DateTime.now();
             zoomUser.Tracking_Date__c           = Date.today();
