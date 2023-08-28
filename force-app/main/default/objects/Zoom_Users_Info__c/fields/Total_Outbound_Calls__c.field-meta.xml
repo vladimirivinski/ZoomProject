@@ -4,7 +4,7 @@
     <description>Total Outbound phone calls</description>
     <externalId>false</externalId>
     <inlineHelpText>Total Outbound phone calls</inlineHelpText>
-    <label>Total Outbound Calls</label>
+    <label>Outbound Calls</label>
     <summaryFilterItems>
         <field>Zoom_Phone_Calls_Info__c.Outbound_Call__c</field>
         <operation>equals</operation>

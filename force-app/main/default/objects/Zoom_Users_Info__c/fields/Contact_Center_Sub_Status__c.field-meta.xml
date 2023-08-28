@@ -4,7 +4,7 @@
     <description>Contact Center user status when the user&apos;s current status is Not Ready.</description>
     <externalId>false</externalId>
     <inlineHelpText>Contact Center user status when the user&apos;s current status is Not Ready.</inlineHelpText>
-    <label>Contact Center Sub Status</label>
+    <label>Sub Status CC</label>
     <length>30</length>
     <required>false</required>
     <trackHistory>true</trackHistory>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Presence_Status__c</fullName>
+    <description>User status for Zoom App</description>
     <externalId>false</externalId>
-    <label>Presence Status</label>
+    <inlineHelpText>User status for Zoom App</inlineHelpText>
+    <label>Status</label>
     <length>25</length>
     <required>false</required>
     <trackHistory>true</trackHistory>

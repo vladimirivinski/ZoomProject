@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Total_Inbound_Calls__c</fullName>
     <externalId>false</externalId>
-    <label>Total Inbound Calls</label>
+    <label>Inbound Calls</label>
     <summaryFilterItems>
         <field>Zoom_Phone_Calls_Info__c.Inbound_Call__c</field>
         <operation>equals</operation>

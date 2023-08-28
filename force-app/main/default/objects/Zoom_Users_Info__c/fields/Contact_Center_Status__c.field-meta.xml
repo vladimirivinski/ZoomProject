@@ -4,7 +4,7 @@
     <description>Contact center user&apos;s availability status.</description>
     <externalId>false</externalId>
     <inlineHelpText>Contact center user&apos;s availability status.</inlineHelpText>
-    <label>Contact Center Status</label>
+    <label>Status CC</label>
     <length>30</length>
     <required>false</required>
     <trackHistory>false</trackHistory>

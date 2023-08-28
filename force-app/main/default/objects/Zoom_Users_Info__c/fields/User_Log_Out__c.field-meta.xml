@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>User_Log_Out__c</fullName>
     <externalId>false</externalId>
-    <label>User Log Out</label>
+    <label>LogOut CC</label>
     <required>false</required>
     <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>

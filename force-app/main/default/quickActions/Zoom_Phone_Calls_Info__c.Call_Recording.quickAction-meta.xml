@@ -5,5 +5,4 @@
     <lightningWebComponent>zoomCallCenterRecordingModal</lightningWebComponent>
     <optionsCreateFeedItem>false</optionsCreateFeedItem>
     <type>LightningWebComponent</type>
-    <isDisabledFormula>Zoom_Phone_Call_Info__c.has_recording__c == false</isDisabledFormula>
 </QuickAction>

@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>CC_Prev_Sub_Status__c</fullName>
     <externalId>false</externalId>
-    <label>CC Prev Sub Status</label>
+    <label>Prev Sub Status CC</label>
     <length>30</length>
     <required>false</required>
     <trackHistory>false</trackHistory>

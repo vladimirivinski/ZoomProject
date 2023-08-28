@@ -11,7 +11,7 @@ IF(FLOOR(Duration__c/60)&lt;10, &quot;00:0&quot;&amp; TEXT(FLOOR(Duration__c/60)
 IF( MOD(Duration__c,60)&lt;10, &quot;0&quot;&amp; TEXT(MOD(Duration__c,60)), TEXT(MOD(Duration__c,60))) &amp;&quot;&quot;
 
 )</formula>
-    <label>Call Duration</label>
+    <label>Call Duration CC</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
