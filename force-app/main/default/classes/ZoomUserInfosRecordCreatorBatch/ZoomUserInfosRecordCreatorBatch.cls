@@ -15,12 +15,14 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
 
         for (User u : scope) {
             Zoom_Users_Info__c zoomUser = new Zoom_Users_Info__c();
+
             String emailKey = u.Email.substringBefore('.invalid').toLowerCase().trim();
+            // String emailKey = u.Email.toLowerCase().trim();
             ZoomUserInfosRecordCreatorBatchService.UsersProfWrapper userInfo = emailToZoomUsersProfileMap.get(emailKey);
             String callCenterName = mapCallCenterIdName.get(u.CallCenterId).Name;
 
             zoomUser.User__c = u.id;
-            zoomUser.Email__c = u.Email.substringBefore('.invalid');// NOTE: substring used for devorg!!!
+            zoomUser.Email__c = u.Email.substringBefore('.invalid');
             // zoomUser.Email__c = u.Email;
             zoomUser.Name                       = u.Name;
             zoomUser.OwnerId                    = u.id;
@@ -83,3 +85,4 @@ public with sharing class ZoomUserInfosRecordCreatorBatch implements Database.Ba
 
 // schedules the batch job to run nightly at 0am. - FROM 0 to 23
 // ZoomUserInfosRecordCreatorBatch.start(0);
+

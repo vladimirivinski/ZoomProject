@@ -2,7 +2,7 @@ public with sharing class ZoomCallCenterService {
     public static List<ZoomCallCenterEntity.VoiceCall> fetchVoiceCallLogs() {
         String baseUrl = 'callout:ZoomPhone/contact_center/voice_calls';
         Integer pageSize = 50;
-        DateTime lastHour = DateTime.now().addHours(-6);
+        DateTime lastHour = DateTime.now().addHours(-1);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String toStr = DateTime.now().formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String fromTime = '&from=' + fromStr;

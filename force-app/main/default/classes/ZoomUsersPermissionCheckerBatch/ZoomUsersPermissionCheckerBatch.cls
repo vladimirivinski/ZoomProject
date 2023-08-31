@@ -1,8 +1,8 @@
 public with sharing class ZoomUsersPermissionCheckerBatch implements Database.Batchable<sObject>, schedulable {
     // NOTE: Define names of the Permission Sets
-    public static final String CALL_CENTER_PS = 'Zoom_Integration_Call_Center_User_Permission_Set';
-    public static final String ADMIN_PS = 'Zoom_Integration_Admin_Permission_Set';
-    public static final String MANAGER_PS = 'Zoom_Integration_Manager_Permission_Set';
+    public static final String CALL_CENTER_PS   = 'Zoom_Integration_Call_Center_User_Permission_Set';
+    public static final String ADMIN_PS         = 'Zoom_Integration_Admin_Permission_Set';
+    public static final String MANAGER_PS       = 'Zoom_Integration_Manager_Permission_Set';
 
     public Database.QueryLocator start(Database.BatchableContext bc) {
         String query = 'SELECT Id, Name FROM User WHERE isActive = true AND CallCenterId != null';
@@ -10,9 +10,13 @@ public with sharing class ZoomUsersPermissionCheckerBatch implements Database.Ba
     }
 
     public void execute(Database.BatchableContext bc, List<User> scope) {
-        List<PermissionSetAssignment> permissionSetAssignments = [SELECT AssigneeId, PermissionSet.Name FROM PermissionSetAssignment WHERE AssigneeId IN :scope];
-        List<String> permissionSetNames = new List<String>{ CALL_CENTER_PS, ADMIN_PS, MANAGER_PS };
-        PermissionSet callCenterPermSetId = [SELECT Id FROM PermissionSet WHERE Name = :CALL_CENTER_PS LIMIT 1];
+        List<PermissionSetAssignment> permissionSetAssignments = [
+                                                                    SELECT AssigneeId, PermissionSet.Name
+                                                                    FROM PermissionSetAssignment
+                                                                    WHERE AssigneeId IN :scope
+                                                                ];
+        List<String> permissionSetNames     = new List<String>{ CALL_CENTER_PS, ADMIN_PS, MANAGER_PS };
+        PermissionSet callCenterPermSetId   = [SELECT Id FROM PermissionSet WHERE Name = :CALL_CENTER_PS LIMIT 1];
 
         // NOTE: Get all users with permission sets
         Set<Id> usersWithPermissionSets = new Set<Id>();
@@ -41,7 +45,9 @@ public with sharing class ZoomUsersPermissionCheckerBatch implements Database.Ba
 
     public void finish(Database.BatchableContext bc) {
         // NOTE: Execute next batch
-        if(!Test.isRunningTest())Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
+        if(!Test.isRunningTest()){
+            Database.executeBatch(new ZoomUserInfosRecordCreatorBatch(), 50);
+        }
     }
 
     //NOTE: Schedule interface
@@ -51,8 +57,8 @@ public with sharing class ZoomUsersPermissionCheckerBatch implements Database.Ba
             Database.executeBatch(new ZoomUsersPermissionCheckerBatch(), 50);
         }
         else {
-            jobName = jobName += ' - ' + datetime.now().format();
-            String cron = '0 0 ' + string.valueof(hour) + ' ? * MON-FRI'; // NOTE: Execute From Monday - Friday
+            jobName = jobName += ' - ' + DateTime.now().format();
+            String cron = '0 0 ' + string.valueOf(hour) + ' ? * MON-FRI'; // NOTE: Execute From Monday - Friday
             system.schedule(jobName, cron, new ZoomUsersPermissionCheckerBatch());
         }
     }

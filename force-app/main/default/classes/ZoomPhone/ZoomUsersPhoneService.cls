@@ -11,7 +11,7 @@ public with sharing class ZoomUsersPhoneService {
 
     public static HttpResponse zoomPhoneCallsCallout(String email){
         String address = 'callout:ZoomPhone/phone/users/' + email + '/call_logs';
-        DateTime lastHour = DateTime.now().addHours(-6);
+        DateTime lastHour = DateTime.now().addHours(-1);
         String fromStr = lastHour.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String toStr = DateTime.now().formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         String fromTime = '?from=' + fromStr;
