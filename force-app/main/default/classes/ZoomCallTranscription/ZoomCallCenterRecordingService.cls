@@ -51,7 +51,7 @@ public with sharing class ZoomCallCenterRecordingService {
 		req.setMethod('GET');
 		HttpResponse response = http.send(req);
 		// Note: The response body is a string application/octet-stream  MIME Type , not a JSON object.
-		System.debug('!!!!!!'+response.getBody());
+		// System.debug('!!!!!!'+response.getBody());
 		return response.getBody();
 	}
 

@@ -1,0 +1,26 @@
+<template>
+	<div class="slds-grid slds-wrap">
+		<template if:true={isDataLoaded}>
+			<div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12">
+				<audio controls style="width: 100%">
+					<source src={recordingUrl} type="audio/mp3" />
+				</audio>
+			</div>
+		</template>
+	</div>
+	<template if:true={isError}>
+		<div class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<lightning-icon icon-name="utility:warning" alternative-text="Warning"></lightning-icon>
+					<h2>{requestMessage}</h2>
+				</div>
+				<div class="modal-body">
+					<template if:false={isRecorded}>
+						<div>{noRecordingMessage}</div>
+					</template>
+				</div>
+			</div>
+		</div>
+	</template>
+</template>

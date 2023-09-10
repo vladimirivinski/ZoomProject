@@ -87,6 +87,7 @@ public with sharing class ZoomTestDataFactory {
         zoomCall.Zoom_Users_Info__c = zoomUser[0].Id;
         zoomCall.Name = 'Test Call';
         zoomCall.Call_Id__c = '123456789';
+        zoomCall.has_recording__c = true;
         insert zoomCall;
         return zoomCall;
     }

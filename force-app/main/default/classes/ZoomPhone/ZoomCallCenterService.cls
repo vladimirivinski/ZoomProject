@@ -30,9 +30,12 @@ public with sharing class ZoomCallCenterService {
             if (response.getStatusCode() == 200) {
                 String json = response.getBody();
                 ZoomCallCenterEntity.CallsDataWrapper wrapper = ZoomCallCenterEntity.parse(json);
-                callsWrappersList.addAll(wrapper.voice_calls);
-                totalRecords = wrapper.total_records;
-                nextPageToken = wrapper.next_page_token;
+                // CHECK Null Pointer exeption!!!
+                if (wrapper != null && wrapper.voice_calls != null) {
+                    callsWrappersList.addAll(wrapper.voice_calls);
+                    totalRecords = wrapper.total_records;
+                    nextPageToken = wrapper.next_page_token;
+                }
             } else {
                 nextPageToken = null;
             }

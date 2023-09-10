@@ -2,7 +2,7 @@
 <QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionSubtype>ScreenAction</actionSubtype>
     <description>Call recording transcription</description>
-    <label>Call Transcription</label>
+    <label>Call Transcript</label>
     <lightningWebComponent>zoomTranscriptModal</lightningWebComponent>
     <optionsCreateFeedItem>false</optionsCreateFeedItem>
     <type>LightningWebComponent</type>
