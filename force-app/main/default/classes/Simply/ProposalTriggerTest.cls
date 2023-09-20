@@ -13,7 +13,7 @@ public class ProposalTriggerTest {
 
 		Opportunity opp = new Opportunity();
 		opp.Name = 'Test Opp';
-		opp.Type = 'Ancillary Billing Flat Fee';
+		opp.Type = 'Ancillary Billing Hourly Rate';
 		opp.StageName = 'Quote Sent';
 		opp.CloseDate = Date.today();
 		opp.AccountId = acc.Id;
