@@ -2,109 +2,17 @@
 public class ProposalTriggerTest {
 	@TestSetup
 	static void makeData() {
-		Account acc = new Account();
-		acc.Name = 'Test Acct';
-		acc.BillingPostalCode = '12345';
-		acc.NumberOfEmployees = 5;
-		acc.Employer_Identification_Number_EIN__c = '122456789';
-		acc.Business_Unit__c = 'Ubiquity';
-		acc.Connected_Partner__c = 'JPM';
-		insert acc;
 
-		Opportunity opp = new Opportunity();
-		opp.Name = 'Test Opp';
-		opp.Type = 'Ancillary Billing Hourly Rate';
-		opp.StageName = 'Quote Sent';
-		opp.CloseDate = Date.today();
-		opp.AccountId = acc.Id;
-		opp.Product_Type__c = '401(k)';
-		opp.Plan_Type__c = 'New Plan';
-		opp.Service_Option__c = 'Express(k)';
-		opp.LeadSource = 'Direct';
-		opp.LeadSourceDetail__c = 'Web Lead Form';
-		opp.Method_of_First_Contact__c = 'Phone';
-		insert opp;
-
-		Implementation__c impl = new Implementation__c();
-		impl.Opportunity_Name__c = opp.Id;
-		impl.Advisor_Fees_Paid_from_ESA__c = 'No';
-		impl.Ubiquity_Admin_Fees_Paid_by_ESA__c = 'No';
-		impl.Ubiquity_Plan_Effective_Date__c = Date.today();
-		impl.Account__c = acc.Id;
-		impl.Plan_Type__c = 'New Plan';
-		impl.Service_Option__c = 'Express(k)';
-		impl.Participant_Fees_Paid_From_ESA__c = 'No';
-		impl.Implementation_Status__c = 'In Progress';
-		insert impl;
-
-		Plan__c plan = new Plan__c();
-		plan.Name = 'test plan';
-		insert plan;
-
-		Proposal__c testProp = new Proposal__c();
-		testProp.Advisor_CRD__c = '55555';
-		testProp.Plan_Effective_Date__c = date.today();
-		testProp.Principal_Opportunity_Stage__c = 'Presentation';
-		testProp.Financial_Professional_Role__c = 'IAR';
-		testProp.Client_Company_Name__c = 'Client Company 01';
-		testProp.Firm_Name__c = 'Advisory Firm 01';
-		testProp.Principal_Opportunity_Closed_Lost_Reason__c = 'Unknown';
-		testProp.Insurance_Agency_NPN__c = 44444;
-		testProp.Contact_Phone_Number__c = '(555)099-4455';
-		testProp.Number_of_Employees__c = 5;
-		testProp.TPA_Firm_Name__c = 'TPA Firm 01';
-		testProp.Company_Zip_Postal_Code__c = 12345;
-		testProp.Company_State__c = 'California';
-		testProp.Advisor_NPN__c = '33333';
-		testProp.TPA_EIN__c = '222222222';
-		testProp.Company_EIN__c = '111111111';
-		testProp.Principal_Id__c = '000000001';
-		testProp.Opportunity__c = opp.Id;
-		testProp.CreatedDate = Date.valueOf('2022-07-14 00:00:00');
-		insert testProp;
-
-		Proposal__c testProp2 = new Proposal__c();
-		testProp2.Advisor_CRD__c = '55555';
-		testProp2.Principal_Opportunity_Stage__c = 'Presentation';
-		testProp2.Financial_Professional_Role__c = 'IA';
-		testProp2.Client_Company_Name__c = 'Client Company 02';
-		testProp2.Firm_Name__c = 'Advisory Firm 02';
-		testProp2.Principal_Opportunity_Closed_Lost_Reason__c = 'Unknown';
-		testProp2.Insurance_Agency_NPN__c = 44444;
-		testProp2.Contact_Phone_Number__c = '(555)099-4455';
-		testProp2.Number_of_Employees__c = 5;
-		testProp2.TPA_Firm_Name__c = 'TPA Firm 02';
-		testProp2.Company_Zip_Postal_Code__c = 12345;
-		testProp2.Company_State__c = 'California';
-		testProp2.Advisor_NPN__c = '33333';
-		testProp2.TPA_EIN__c = '222222222';
-		testProp2.Company_EIN__c = '111111111';
-		testProp2.Principal_Id__c = '000000002';
-		insert testProp2;
-
-		Proposal__c testProp3 = new Proposal__c();
-		testProp3.Advisor_CRD__c = '55555';
-		testProp3.Principal_Opportunity_Stage__c = 'Committed';
-		testProp3.Financial_Professional_Role__c = 'RR';
-		testProp3.Client_Company_Name__c = 'Client Company 03';
-		testProp3.Firm_Name__c = 'Advisory Firm 03';
-		testProp3.Principal_Opportunity_Closed_Lost_Reason__c = 'Unknown';
-		testProp3.Insurance_Agency_NPN__c = 44444;
-		testProp3.Contact_Phone_Number__c = '(555)099-4455';
-		testProp3.Number_of_Employees__c = 5;
-		testProp3.TPA_Firm_Name__c = 'TPA Firm 03';
-		testProp3.Company_Zip_Postal_Code__c = 12345;
-		testProp3.Company_State__c = 'California';
-		testProp3.Advisor_NPN__c = '33333';
-		testProp3.TPA_EIN__c = '222222222';
-		testProp3.Company_EIN__c = '111111111';
-		testProp3.Principal_Id__c = '000000003';
-		insert testProp3;
+		Account acc = DataFactory.createAccount();
+		Opportunity opp = DataFactory.createOpportunity(acc);
+		// List<Account> accLst = DataFactory.createAccounts(130);
+		// List<Opportunity> oppLst = DataFactory.createOpportunities(130, accLst);
+		List<Proposal__c> propLst = DataFactory.createProposals(100, opp);
 	}
+
 
 	@isTest
 	public static void testProposalTriggerNew() {
-		List<String> prId = new List<String>{ '000000001', '000000002', '000000003' };
 		List<Proposal__c> proposalList = [
 			SELECT
 				Id,
@@ -126,20 +34,23 @@ public class ProposalTriggerTest {
 				Company_Zip_Postal_Code__c,
 				Financial_Professional_Role__c,
 				Insurance_Agency_NPN__c,
+				Manual_Callout__c,
 				Principal_Id__c
 			FROM Proposal__c
-			WHERE Principal_Id__c IN :prId
+			WHERE Advisor_CRD__c = '55555'
 		];
+		System.debug('proposalList: ' + proposalList);
 		for (Proposal__c p : proposalList) {
-			if (p.Principal_Id__c == '000000001') {
+			System.debug('p.Principal_Id__c: ' + p.Principal_Id__c);
+			if (String.valueOf(p.Principal_Id__c).startsWith('0')) {
 				p.Financial_Professional_Role__c = 'IAR';
 				p.Principal_Opportunity_Stage__c = 'Committed';
 				p.Manual_Callout__c = true;
-			} else if (p.Principal_Id__c == '000000002') {
+			} else if (String.valueOf(p.Principal_Id__c).startsWith('1')) {
 				p.External_Response__c = '{"errors":[1],"client":{"errors":[1],';
 				p.Financial_Professional_Role__c = 'RR';
 				p.Principal_Opportunity_Stage__c = 'Committed';
-			} else if (p.Principal_Id__c == '000000003') {
+			} else if (String.valueOf(p.Principal_Id__c).startsWith('3')) {
 				p.Financial_Professional_Role__c = 'RR';
 				p.Principal_Opportunity_Stage__c = 'Committed';
 			}
@@ -177,6 +88,8 @@ public class ProposalTriggerTest {
 		update testProp;
 		Test.setMock(HttpCalloutMock.class, new SimplyCalloutMockFail());
 	}
+
+    // ========== ========== ========== ========== ========== ========== 
 	// @isTest public static void testProposalTriggerUpdate(){
 	//     Proposal__c testProp      = new Proposal__c();
 	//     Proposal__c testProp2     = new Proposal__c();
